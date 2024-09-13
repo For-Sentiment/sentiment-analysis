@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<users>
+    
+    
+    <user>
+        <username>CELINE</username>
+        <password>4321</password>
+        <user_type>ADMIN</user_type>
+    </user>
+    <user>
+        <username>MOIRA</username>
+        <password>4321</password>
+        <user_type>ADMIN</user_type>
+    </user>
+    <user>
+        <username>CARMELO</username>
+        <password>321</password>
+        <user_type>ADMIN</user_type>
+    </user>
+<user><username>BENJ</username><password>123456</password><user_type>USER</user_type></user></users>
