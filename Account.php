@@ -2,7 +2,6 @@
 session_start();
 
 
-// Check for logout request
 if (isset($_GET['logout'])) {
     session_destroy();
     header("Location: index.php");
@@ -15,7 +14,7 @@ if (!isset($_SESSION['user'])) {
     exit();
 }
 
-$xmlFile = 'users.xml';
+$xmlFile = 'nlp.xml';
 if (file_exists($xmlFile)) {
     $xml = simplexml_load_file($xmlFile);
 } else {
@@ -36,15 +35,15 @@ if (isset($_GET['delete'])) {
     $usernameToDelete = $_GET['delete'];
 
     $xml = new DOMDocument;
-    $xml->load('users.xml'); 
+    $xml->load('nlp.xml'); 
 
     $users = $xml->getElementsByTagName('user');
     foreach ($users as $user) {
         $username = $user->getElementsByTagName('username')->item(0)->textContent;
         if ($username === $usernameToDelete) {
             $user->parentNode->removeChild($user);
-            $xml->save('users.xml');
-            header("Location: account.php");
+            $xml->save('nlp.xml');
+            header("Location: Account.php");
             exit();
         }   
     }
@@ -62,7 +61,7 @@ if (isset($_POST['edit_user'])) {
             $user->password = $_POST['password'];
             $user->user_type = $_POST['user_type'];
             $xml->asXML($xmlFile);
-            header("Location: account.php"); 
+            header("Location: Account.php"); 
             exit();
         }
     }
@@ -74,7 +73,7 @@ if (isset($_POST['edit_user'])) {
 <html lang="en">
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> 
-    <link rel="shortcut icon" type="x-icon" href="logoo1.png">
+    <link rel="shortcut icon" type="x-icon" href="images/logoo1.png">
     <title>Account</title>
     <style>
         body {
@@ -228,7 +227,7 @@ if (isset($_POST['edit_user'])) {
         transform: translateY(-50%);
         width: 30px;
         height: 30px;
-        background-image: url('dashb.png');
+        background-image: url('images/dashb.png');
         background-size: cover;
     }
 
@@ -245,7 +244,7 @@ if (isset($_POST['edit_user'])) {
         transform: translateY(-50%);
         width: 30px;
         height: 30px;
-        background-image: url('realt.png');
+        background-image: url('images/realt.png');
         background-size: cover;
     }
 
@@ -262,7 +261,7 @@ if (isset($_POST['edit_user'])) {
         transform: translateY(-50%);
         width: 30px;
         height: 30px;
-        background-image: url('sentit.png');
+        background-image: url('images/sentit.png');
         background-size: cover;
     }
 
@@ -279,7 +278,7 @@ if (isset($_POST['edit_user'])) {
         transform: translateY(-50%);
         width: 30px;
         height: 30px;
-        background-image: url('user.png');
+        background-image: url('images/user.png');
         background-size: cover;
     }
 
@@ -296,7 +295,7 @@ if (isset($_POST['edit_user'])) {
         transform: translateY(-50%);
         width: 30px;
         height: 30px;
-        background-image: url('logout.png');
+        background-image: url('images/logout.png');
         background-size: cover;
     }
 
@@ -338,8 +337,8 @@ if (isset($_POST['edit_user'])) {
     text-decoration: none;
     font-size: 12px;
     color: rgb(0, 0, 0);
-    border: 1px solid #424e66;
     border-radius: 5px ;        
+    border: 1px solid #424e66;
     font-family:Arial, Helvetica, sans-serif;
 }
 
@@ -357,7 +356,6 @@ if (isset($_POST['edit_user'])) {
     border-radius: 5px ;  
     font-family:Arial, Helvetica, sans-serif;
 }
-
 
 .edit, .delete{
     display: inline-block !important;
@@ -396,7 +394,6 @@ if (isset($_POST['edit_user'])) {
     margin-right: 51%;
 }
 
-
 .admin-icon {
         position: relative;
         padding-left: 70px;
@@ -410,7 +407,7 @@ if (isset($_POST['edit_user'])) {
         transform: translateY(-50%);
         width: 70px;
         height: 70px;
-        background-image: url('admin.png');
+        background-image: url('images/admin.png');
         background-size: cover;
     }
 
@@ -521,6 +518,7 @@ if (isset($_POST['edit_user'])) {
             user-select: none;
         }
 
+
     </style>
 </head>
 <body>
@@ -583,7 +581,7 @@ if (isset($_POST['edit_user'])) {
 
 <div id="addUserForm" class="form-container">
         <h2>ADD USER</h2>
-        <form action="account.php" method="post">
+        <form action="Account.php" method="post">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required><br>
 
@@ -604,10 +602,9 @@ if (isset($_POST['edit_user'])) {
         </form>
     </div>
 
-    <!-- Edit User Form -->
     <div id="editUserForm" class="form-container">
         <h2>Edit User</h2>
-        <form action="account.php" method="post">
+        <form action="Account.php" method="post">
             <input type="hidden" id="old_username" name="old_username">
 
             <label for="username">Username:</label>
@@ -631,17 +628,14 @@ if (isset($_POST['edit_user'])) {
     </div>
 
 
-<!-- Overlay -->
 <div id="formOverlay" class="form-overlay"></div>
 
 
-<!-- Notification -->
 <div id="notification" class="notification">
     <p>Your notification message here</p>
     <button onclick="closeNotification()">Close</button>
 </div>
 
-<!-- Logout Confirmation Dialog -->
 <div id="logout-confirmation" class="logout-confirmation">
     <h2>Logging Out?</h2>
     <button onclick="logout()">Yes</button>
@@ -649,29 +643,18 @@ if (isset($_POST['edit_user'])) {
 </div>
 
 <script>
-        // Function to toggle password visibility
         function togglePassword(passwordId, icon) {
             const passwordInput = document.getElementById(passwordId);
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
                 icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash'); // Change to "eye-slash" icon
+                icon.classList.add('fa-eye-slash'); 
             } else {
                 passwordInput.type = 'password';
                 icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye'); // Change back to "eye" icon
+                icon.classList.add('fa-eye'); 
             }
         }
-        
-        // Example functions to show/hide forms (implement as needed)
-        function hideAddUserForm() {
-            document.getElementById('addUserForm').style.display = 'none';
-        }
-        
-        function hideEditUserForm() {
-            document.getElementById('editUserForm').style.display = 'none';
-        }
-
 function showLogoutConfirmation() {
         document.getElementById('logout-confirmation').style.display = 'block';
         document.querySelector('.sidebar').classList.add('blurred');
