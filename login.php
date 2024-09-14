@@ -1,4 +1,4 @@
-<?php
+    <?php
 session_start();
 
 $current_time = time();
@@ -13,7 +13,7 @@ if (!isset($_SESSION['attempts'])) {
     $_SESSION['attempts'] = 4;
 }
 
-$xmlFile = 'users.xml';
+$xmlFile = 'nlp.xml';
 
 if (file_exists($xmlFile)) {
     $xml = simplexml_load_file($xmlFile);
@@ -41,7 +41,6 @@ if ($valid) {
     header("Location: home.php"); 
     exit();
 } else {
-    // Invalid credentials
     $_SESSION['attempts'] -= 1;
     if ($_SESSION['attempts'] > 0) {
         $_SESSION['error'] = "Username and Password incorrect. {$_SESSION['attempts']} more attempts.";
@@ -54,3 +53,4 @@ if ($valid) {
     exit();
 }
 ?>
+S
