@@ -364,26 +364,28 @@ document.addEventListener('DOMContentLoaded', function() {
         event.preventDefault();
         const formData = new FormData(form);
 
-fetch('https://nlp-sentiment-analysis-f4u4.onrender.com/upload_csv', {
-    method: 'POST',
-    body: formData
-})
-
-.then(response => response.json())
-.then(data => {
-    if (data.results) {
-        // Save results to localStorage and redirect
-        localStorage.setItem('analysisResults', JSON.stringify(data.results));
-        window.location.href = 'ImportResult.php';
-    } else {
-        alert('No results found.');
-    }
-})
-.catch(error => {
-    console.error('Error fetching results:', error);
-    alert('Error fetching results: ' + error.message);
-});
-
+        fetch('https://nlp-sentiment-analysis-f4u4.onrender.com/upload_csv', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.results) {
+                localStorage.setItem('analysisResults', JSON.stringify(data.results));
+                window.location.href = 'ImportResult.php';
+            } else {
+                alert('No results found.');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching results:', error);
+            alert('Error fetching results: ' + error.message);
+        });
     });
 });
 
