@@ -4,12 +4,7 @@
     
     <user>
         <username>CELINE</username>
-        <password>4321</password>
-        <user_type>ADMIN</user_type>
-    </user>
-    <user>
-        <username>MOIRA</username>
-        <password>4321</password>
+        <password>123</password>
         <user_type>ADMIN</user_type>
     </user>
     <user>
@@ -17,4 +12,4 @@
         <password>321</password>
         <user_type>ADMIN</user_type>
     </user>
-<user><username>BENJ</username><password>123456</password><user_type>USER</user_type></user></users>
+<user><username>YUAN</username><password>1234</password><user_type>ADMIN</user_type></user><user><username>MARIEVE</username><password>1123</password><user_type>ADMIN</user_type></user><user><username>MOIRA</username><password>54321</password><user_type>ADMIN</user_type></user></users>
