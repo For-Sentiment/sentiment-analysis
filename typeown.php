@@ -14,8 +14,8 @@ if (!isset($_SESSION['user'])) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<link rel="shortcut icon" type="x-icon" href="logoo1.png">
-<title>Home</title>
+<link rel="shortcut icon" type="x-icon" href="images/logoo1.png">
+<title>NLP Sentiment Analysis</title>
 <style>
         body {
             font-family: Arial, sans-serif;
@@ -219,7 +219,7 @@ if (!isset($_SESSION['user'])) {
         transform: translateY(-50%);
         width: 30px;
         height: 30px;
-        background-image: url('images/account.png');
+        background-image: url('images/user.png');
         background-size: cover;
     }
 
@@ -287,18 +287,17 @@ if (!isset($_SESSION['user'])) {
     top: 20%;
     background-color: #456ab6;
     color: rgba(255, 255, 255, 0.5);
-    padding: 20px; /* Reduce padding for smaller size */
+    padding: 20px; 
     border-radius: 50%;
     display: inline-block;
     text-align: center;
-    width: 80px; /* Adjust width */
-    height: 80px; /* Adjust height */
-    line-height: 90px; /* Match height for centering the logo vertically */
-    font-size: 580px; /* Adjust font size */
+    width: 80px; 
+    height: 80px; 
+    line-height: 90px; 
+    font-size: 580px; 
     z-index: -99;
 }
 
-/* Search Box Container */
 .search-container {
     position: absolute;
     display: flex;
@@ -308,7 +307,6 @@ if (!isset($_SESSION['user'])) {
     margin-right: 350px;
 }
 
-/* Styling the Search Box */
 .search-box {
     background-color: white;
     border-radius: 50px;
@@ -316,22 +314,20 @@ if (!isset($_SESSION['user'])) {
     align-items: center;
     padding: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 500px; /* Set desired search box width */
+    width: 500px;
 }
 
-/* Styling the Input Field */
 .search-box input[type="text"] {
     border: none;
     outline: none;
     font-size: 16px;
     padding: 10px;
     border-radius: 50px;
-    width: 100%; /* Make the input take full width */
-    margin-right: 10px; /* Add spacing between input and button */
-    flex-grow: 1; /* Allow the input to grow with the available space */
+    width: 100%; 
+    margin-right: 10px; 
+    flex-grow: 1; 
 }
 
-/* Styling the Search Button */
 .search-btn {
     background-color: transparent;
     border: none;
@@ -343,9 +339,8 @@ if (!isset($_SESSION['user'])) {
     justify-content: center;
 }
 
-/* Styling the Icon with Circular Background */
 .search-icon {
-    background-color: #3b5998; /* Blue background for the circle */
+    background-color: #3b5998;
     color: white;
     font-size: 20px;
     border-radius: 50%;
@@ -406,7 +401,7 @@ if (!isset($_SESSION['user'])) {
 
             
 <div class="search-container">
-    <form action="typeprocess.php" method="POST">
+    <form action="Result.php" method="POST">
         <div class="search-box">
             <input type="text" id="comment" name="comment" placeholder="Enter comment to be analyzed" required>
             <button type="submit" class="search-btn">
@@ -422,17 +417,16 @@ if (!isset($_SESSION['user'])) {
     </div>
 
 
-<!-- Overlay -->
+
 <div id="formOverlay" class="form-overlay"></div>
 
 
-<!-- Notification -->
 <div id="notification" class="notification">
     <p>Your notification message here</p>
     <button onclick="closeNotification()">Close</button>
 </div>
 
-<!-- Logout Confirmation Dialog -->
+
 <div id="logout-confirmation" class="logout-confirmation">
     <h2>Logging Out?</h2>
     <button onclick="logout()">Yes</button>
@@ -440,7 +434,6 @@ if (!isset($_SESSION['user'])) {
 </div>
 
 
-<!-- Your other scripts for notifications, logout, etc. -->
 <script>
     function showLogoutConfirmation() {
         document.getElementById('logout-confirmation').style.display = 'block';
