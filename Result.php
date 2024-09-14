@@ -23,8 +23,8 @@ $negativeClass = $sentiment == 'negative' ? 'highlight' : '';
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<link rel="shortcut icon" type="x-icon" href="logoo1.png">
-<title>Home</title>
+<link rel="shortcut icon" type="x-icon" href="images/logoo1.png">
+<title>NLP Sentiment Analysis</title>
 <style>
         body {
             font-family: Arial, sans-serif;
@@ -228,7 +228,7 @@ $negativeClass = $sentiment == 'negative' ? 'highlight' : '';
         transform: translateY(-50%);
         width: 30px;
         height: 30px;
-        background-image: url('images/account.png');
+        background-image: url('images/user.png');
         background-size: cover;
     }
 
