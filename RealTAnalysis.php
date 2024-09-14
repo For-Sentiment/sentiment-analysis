@@ -14,8 +14,8 @@ if (!isset($_SESSION['user'])) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<link rel="shortcut icon" type="x-icon" href="logoo1.png">
-<title>Home</title>
+<link rel="shortcut icon" type="x-icon" href="images/logoo1.png">
+<title>NLP Real-Time Analysis</title>
 <style>
         body {
             font-family: Arial, sans-serif;
@@ -219,7 +219,7 @@ if (!isset($_SESSION['user'])) {
         transform: translateY(-50%);
         width: 30px;
         height: 30px;
-        background-image: url('images/account.png');
+        background-image: url('images/user.png');
         background-size: cover;
     }
 
@@ -250,120 +250,50 @@ if (!isset($_SESSION['user'])) {
     width: 70%;
 }
 
-    .main-content h1 {
+    .main-content h2 {
     color: white;
-    font-size: 50px;
+    font-size: 25px;
     font-family: Arial Black, sans-serif; 
-    margin-bottom: 10px;
+    margin-bottom: -10px;
     margin-right: 30%;
 }
 
 .main-content p {
     color: white;
-    font-size: 25px;
+    font-size: 15px;
     font-family: Arial Black, sans-serif; 
-    margin-bottom: 10px;
+    margin-bottom: 40px;
     margin-right: 25px;
 }
 
-.emoji-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 50px;
-    margin-right: 50px;
-}
-
-.Positive img, .Neutral img, .Negative img {
-    width: 110px;
-    height: auto;
-    margin: 0 10px;
-    cursor: pointer;
-}
-
-.facebooklogo {
+.dashboard-button{
+    background-color: #8b9dc3;
     position: absolute;
-    right: 260px; 
-    top: 20%;
-    background-color: #456ab6;
-    color: rgba(255, 255, 255, 0.5);
-    padding: 20px; /* Reduce padding for smaller size */
-    border-radius: 50%;
+    font-weight: 300;
+    color: white;
+    width: 10%;
+    height: 35px;
+    top: 10.5%;
+    left: 83%;
+    border-radius: 5px;
+    font-size: 14px;
+    font-family: Arial Black, sans-serif;
+    cursor: pointer;
+    text-decoration: none;
     display: inline-block;
-    text-align: center;
-    width: 80px; /* Adjust width */
-    height: 80px; /* Adjust height */
-    line-height: 90px; /* Match height for centering the logo vertically */
-    font-size: 580px; /* Adjust font size */
-    z-index: -99;
+    border: 1px solid #424e66;
+
 }
 
-/* Search Box Container */
-.search-container {
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 430px;
-    margin-right: 350px;
+
+.dashboard-button:hover{
+    background-color: #3b5998;
 }
 
-/* Styling the Search Box */
-.search-box {
-    background-color: white;
-    border-radius: 50px;
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 500px; /* Set desired search box width */
-}
 
-/* Styling the Input Field */
-.search-box input[type="text"] {
-    border: none;
-    outline: none;
-    font-size: 16px;
-    padding: 10px;
-    border-radius: 50px;
-    width: 100%; /* Make the input take full width */
-    margin-right: 10px; /* Add spacing between input and button */
-    flex-grow: 1; /* Allow the input to grow with the available space */
-}
 
-/* Styling the Search Button */
-.search-btn {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 
-/* Styling the Icon with Circular Background */
-.search-icon {
-    background-color: #3b5998; /* Blue background for the circle */
-    color: white;
-    font-size: 20px;
-    border-radius: 50%;
-    padding: 10px;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 
-#result {
-    position: absolute;
-    font-size: 40px;
-    color: white;
-    margin-top: 650px;
-    margin-right: 370px;
-}
 
 </style>
 </head>
@@ -391,35 +321,10 @@ if (!isset($_SESSION['user'])) {
 </div>
 
 <div class="main-content">
-        <h1>REAL TIME <br> SENTIMENT ANALYSIS</h1>
-        <p>Update the Facebook link weekly.</p>
-        <div class="emoji-container">
-            <div class="Positive">
-                <img src="images/happy.png" alt="Positive">
-            </div>
-            <div class="Neutral">
-                <img src="images/neutral.png" alt="Neutral">
-            </div>
-            <div class="Negative">
-                <img src="images/aangryy.png" alt="Negative">
-            </div>
+        <h2>REAL-TIME SENTIMENT ANALYSIS</h2>
+        <p>Updated Facebook Page.</p>
+    <a href="home.php"> <button class="dashboard-button">See Dashboard</button></a>
 
-            
-<div class="search-container">
-    <form action="RealTresult.php" method="POST">
-        <div class="search-box">
-            <input type="text" id="comment" name="comment" placeholder="Enter comment to be analyzed" required>
-            <button type="submit" class="search-btn">
-                <i class="search-icon">&#128269;</i>
-            </button>
-        </div>
-    </form>
-</div>
-
-
-    <div class="facebooklogo">
-        <i class="fab fa-facebook-f"></i>
-    </div>
 
 
 <!-- Overlay -->
