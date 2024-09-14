@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Log In</title>
+    <link rel="shortcut icon" type="x-icon" href="images/logoo1.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <style>
@@ -86,7 +87,7 @@
             top: 50%;
             transform: translateY(-50%);
             cursor: pointer;
-            font-size: 24px;
+            font-size: 20px;
             color: #3b5998;
             user-select: none;
         }
@@ -95,7 +96,7 @@
 <body>
     <div class="main-div">
         <div class="div-form" id="login-form">
-            <img src="user.png" alt="User Icon">
+            <img src="images/user.png" alt="User Icon">
             <h1 class="admin-login">Admin</h1>
             <form method="post" action="login.php">
                 <div class="form-group">
@@ -140,7 +141,6 @@
             }
         }
 
-        // Lockout countdown script
         var lockoutTime = <?php echo isset($_SESSION['lockout_time']) ? ($_SESSION['lockout_time'] - time()) : 0; ?>;
         if (lockoutTime > 0) {
             var countdownElement = document.getElementById('countdown');
