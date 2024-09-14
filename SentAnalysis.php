@@ -14,8 +14,8 @@ if (!isset($_SESSION['user'])) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<link rel="shortcut icon" type="x-icon" href="logoo1.png">
-<title>Home</title>
+<link rel="shortcut icon" type="x-icon" href="images/logoo1.png">
+<title>NLP Sentiment Analysis</title>
 <style>
         body {
             font-family: Arial, sans-serif;
@@ -219,7 +219,7 @@ if (!isset($_SESSION['user'])) {
         transform: translateY(-50%);
         width: 30px;
         height: 30px;
-        background-image: url('images/account.png');
+        background-image: url('images/user.png');
         background-size: cover;
     }
 
@@ -282,76 +282,78 @@ if (!isset($_SESSION['user'])) {
 }
 
 .comment-icon {
-    position: absolute; /* This keeps it fixed within the parent container */
-    bottom: 265px;       /* Adjust this value to control the distance from the bottom of the page */
-    left: 65%;          /* Centers it horizontally relative to the page */
-    transform: translateX(-50%); /* Ensures proper centering by shifting it 50% of its own width */
+    position: absolute; 
+    bottom: 265px;       
+    left: 65%;          
+    transform: translateX(-50%); 
     display: flex;
-    justify-content: center; /* Centers the icons horizontally */
-    align-items: center;     /* Aligns the icons vertically in the center */
-    margin-top: 50px;        /* Adjust the vertical space between icons and other elements */
+    justify-content: center; 
+    align-items: center;     
+    margin-top: 50px;       
     color:white;
 }
 
 .import-icon {
     display: flex;
-    flex-direction: column;  /* Aligns items in a column (image, h2, and p) */
-    align-items: center;     /* Centers the content horizontally */
-    text-align: center;      /* Centers the text */
-    margin-bottom: -150px;     /* Optional: Adds spacing below the import section */
+    flex-direction: column;  
+    align-items: center;     
+    text-align: center;    
+    margin-bottom: -150px;     
 }
 
 .import-icon img {
     width: 160px;
     height: auto;
-    margin-right: 220px; /* Adjusts the space between the import and type icons */
+    margin-right: 220px; 
     cursor: pointer;
 }
 
 .import-icon h2 {
-    font-size: 18px;         /* Adjust the heading size */
-    margin: 10px 0;          /* Adds vertical spacing above and below the heading */
+    font-size: 18px;        
+    margin: 10px 0;          
     margin-right: 183px;   
     color:white;
 }
 
 .import-icon p {
-    font-size: 14px;         /* Adjust the paragraph size */
-    line-height: 1.5;        /* Adds space between lines in the paragraph */
-    margin: 0;               /* Removes default margins around the paragraph */
+    font-size: 14px;        
+    line-height: 1.5;       
+    margin: 0;               
     margin-right: 190px;   
 
 }
 
 .type-icon {
     display: flex;
-    flex-direction: column;  /* Aligns items in a column (image, h2, and p) */
-    align-items: center;     /* Centers the content horizontally */
-    text-align: center;      /* Centers the text */
-    margin-bottom: -153px;     /* Optional: Adds spacing below the import section */
+    flex-direction: column;  
+    align-items: center;     
+    text-align: center;      
+    margin-bottom: -153px;    
 }
 
 .type-icon img {
     width: 160px;
     height: auto;
-    margin-right: 10px; /* Adjusts the space between the import and type icons */
+    margin-right: 10px; 
     cursor: pointer;
 }
 
 .type-icon h2 {
-    font-size: 18px;         /* Adjust the heading size */
-    margin: 10px 0;          /* Adds vertical spacing above and below the heading */
+    font-size: 18px;        
+    margin: 10px 0;          
     margin-right: 10px;   
 
 }
 
 .type-icon p {
-    font-size: 14px;         /* Adjust the paragraph size */
-    line-height: 1.5;        /* Adds space between lines in the paragraph */
-    margin: 0;               /* Removes default margins around the paragraph */
+    font-size: 14px;         
+    line-height: 1.5;        
+    margin: 0;               
 
 }
-    
+
+
+
 </style>
 </head>
 <body>
