@@ -3,7 +3,7 @@
 $comment = $_POST['comment'];
 
 // Use cURL to send the comment to the Flask API and get the result
-$api_url = 'http://127.0.0.1:5000/analyze';
+$api_url = 'https://nlp-sentiment-analysis-f4u4.onrender.com';
 
 $ch = curl_init($api_url);
 $data = json_encode(array('comment' => $comment));
