@@ -401,7 +401,7 @@ if (!isset($_SESSION['user'])) {
 
             
 <div class="search-container">
-    <form action="Result.php" method="POST">
+    <form action="typeprocess.php" method="POST">
         <div class="search-box">
             <input type="text" id="comment" name="comment" placeholder="Enter comment to be analyzed" required>
             <button type="submit" class="search-btn">
