@@ -8,28 +8,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-
 analyzer = SentimentIntensityAnalyzer()
-# Existing route for typed comments
-@app.route('/analyze', methods=['POST'])
-def analyze_sentiment():
-    comment = request.json.get('comment')
-
-    # Normalize the comment
-    comment = comment.lower()  # Convert to lowercase
-    comment = re.sub(r'[^\w\s]', '', comment)  # Remove special characters
-
-    sentiment_scores = analyzer.polarity_scores(comment)
-    compound_score = sentiment_scores['compound']
-
-    if compound_score >= 0.05:
-        sentiment = "positive"
-    elif compound_score <= -0.05:
-        sentiment = "negative"
-    else:
-        sentiment = "neutral"
-
-    return jsonify({"sentiment": sentiment, "comment": comment})
 
 def clean_comment(comment):
     # Remove emojis, special characters, and repeated expressions like "haha", "huhu", "hehe"
@@ -38,21 +17,52 @@ def clean_comment(comment):
     comment = re.sub(r'\s+', ' ', comment).strip()  # Remove extra spaces
     return comment
 
+@app.route('/analyze', methods=['POST'])
+def analyze_sentiment():
+    try:
+        # Get the comment from the request
+        comment = request.json.get('comment', '')
+
+        # Normalize the comment
+        comment = comment.lower()  # Convert to lowercase
+        comment = re.sub(r'[^\w\s]', '', comment)  # Remove special characters
+
+        # Analyze sentiment
+        sentiment_scores = analyzer.polarity_scores(comment)
+        compound_score = sentiment_scores['compound']
+
+        if compound_score >= 0.05:
+            sentiment = "positive"
+        elif compound_score <= -0.05:
+            sentiment = "negative"
+        else:
+            sentiment = "neutral"
+
+        # Log for debugging
+        app.logger.debug(f"Comment: {comment}")
+        app.logger.debug(f"Sentiment Scores: {sentiment_scores}")
+        app.logger.debug(f"Sentiment: {sentiment}")
+
+        return jsonify({"sentiment": sentiment, "comment": comment})
+
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
 @app.route('/upload_csv', methods=['POST'])
 def upload_csv():
-    if 'file' not in request.files:
-        return jsonify({'error': 'No file part'})
-
-    file = request.files['file']
-    if file.filename == '':
-        return jsonify({'error': 'No selected file'})
-
-    # Save the uploaded file to a temporary location
-    file_path = os.path.join('uploads', file.filename)
-    os.makedirs(os.path.dirname(file_path), exist_ok=True)
-    file.save(file_path)
-
     try:
+        if 'file' not in request.files:
+            return jsonify({'error': 'No file part'})
+
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({'error': 'No selected file'})
+
+        # Save the uploaded file to a temporary location
+        file_path = os.path.join('uploads', file.filename)
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+        file.save(file_path)
+
         # Read the file
         df = pd.read_csv(file_path)
 
@@ -90,7 +100,6 @@ def upload_csv():
 
     except Exception as e:
         return jsonify({'error': str(e)})
-
 
 if __name__ == '__main__':
     app.run(debug=True)
