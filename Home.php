@@ -14,8 +14,8 @@ if (!isset($_SESSION['user'])) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<link rel="shortcut icon" type="x-icon" href="logoo1.png">
-<title>Home</title>
+<link rel="shortcut icon" type="x-icon" href="images/logoo1.png">
+<title>Home-Dashboards</title>
 <style>
     body {
         font-family: 'Open Sans';
@@ -224,7 +224,7 @@ if (!isset($_SESSION['user'])) {
         transform: translateY(-50%);
         width: 30px;
         height: 30px;
-        background-image: url('images/account.png');
+        background-image: url('images/user.png');
         background-size: cover;
     }
 
@@ -289,10 +289,10 @@ if (!isset($_SESSION['user'])) {
 
         <ul>
             <li class="top-items">
-                <li><a href="Dashboard.php" class="dashboard-icon"> &nbsp; Dashboard</a></li>
-                <li><a href="Realtime Sentiment Analysis.php" class="realtime-icon"> &nbsp; Realtime Sentiment Analysis</a></li>
+                <li><a href="home.php" class="dashboard-icon"> &nbsp; Dashboard</a></li>
+                <li><a href="RealTAnalysis.php" class="realtime-icon"> &nbsp; Realtime Sentiment Analysis</a></li>
                 <li><a href="SentAnalysis.php" class="sentiment-icon"> &nbsp; Sentiment Analysis</a></li>
-                </li>
+            </li>
             <li class="bottom-items">
                 <li><a href="Account.php" class="acc-icon"> &nbsp; Account</a></li>
                 <li><a href="#" onclick="showLogoutConfirmation()" class="logout-icon"> &nbsp; Logout</a></li>
