@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded', function() {
         event.preventDefault();
         const formData = new FormData(form);
 
-        fetch('http://127.0.0.1:5000/upload_csv', {
+fetch('https://nlp-sentiment-analysis-f4u4.onrender.com/upload_csv', {
     method: 'POST',
     body: formData
 })
@@ -385,9 +385,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     });
 });
-
-
-
 
 
         function showLogoutConfirmation() {
