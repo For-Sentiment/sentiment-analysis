@@ -1,8 +1,14 @@
 <?php
-// Capture the sentiment and comment from the URL
-$sentiment = isset($_GET['sentiment']) ? $_GET['sentiment'] : '';
-$comment = isset($_GET['comment']) ? htmlspecialchars($_GET['comment']) : '';
+// Start session
+session_start();
 
+// Retrieve the sentiment and comment from the session
+$sentiment = isset($_SESSION['sentiment']) ? $_SESSION['sentiment'] : '';
+$comment = isset($_SESSION['comment']) ? htmlspecialchars($_SESSION['comment']) : '';
+
+// Optional: Clear the session data after displaying (so it doesn't persist)
+unset($_SESSION['sentiment']);
+unset($_SESSION['comment']);
 
 // Convert the comment to lowercase
 $comment = strtolower($comment);
@@ -15,6 +21,7 @@ $positiveClass = $sentiment == 'positive' ? 'highlight' : '';
 $neutralClass = $sentiment == 'neutral' ? 'highlight' : '';
 $negativeClass = $sentiment == 'negative' ? 'highlight' : '';
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
