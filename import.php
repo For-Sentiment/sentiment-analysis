@@ -14,7 +14,7 @@ if (!isset($_SESSION['user'])) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<link rel="shortcut icon" type="x-icon" href="logoo1.png">
+<link rel="shortcut icon" type="x-icon" href="images/logoo1.png">
 <title>Home</title>
 <style>
         body {
@@ -154,6 +154,92 @@ if (!isset($_SESSION['user'])) {
         line-height: 20px;
         font-size: 90px;   
         }
+
+        .dashboard-icon {
+        position: relative;
+        padding-left: 24px;
+    }
+
+    .dashboard-icon::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 30px;
+        height: 30px;
+        background-image: url('images/dashb.png');
+        background-size: cover;
+    }
+
+    .realtime-icon {
+        position: relative;
+        padding-left: 24px;
+    }
+
+    .realtime-icon::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 30px;
+        height: 30px;
+        background-image: url('images/realt.png');
+        background-size: cover;
+    }
+
+    .sentiment-icon {
+        position: relative;
+        padding-left: 24px;
+    }
+
+    .sentiment-icon::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 30px;
+        height: 30px;
+        background-image: url('images/sentit.png');
+        background-size: cover;
+    }
+
+    .acc-icon {
+        position: relative;
+        padding-left: 24px;
+    }
+
+    .acc-icon::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 30px;
+        height: 30px;
+        background-image: url('images/user.png');
+        background-size: cover;
+    }
+
+    .logout-icon {
+        position: relative;
+        padding-left: 24px;
+    }
+
+    .logout-icon::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 30px;
+        height: 30px;
+        background-image: url('images/logout.png');
+        background-size: cover;
+    }
+
 
         .main-content {
             margin-top: -20px;
@@ -365,29 +451,29 @@ document.addEventListener('DOMContentLoaded', function() {
         const formData = new FormData(form);
 
         fetch('https://nlp-sentiment-analysis-f4u4.onrender.com/upload_csv', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.results) {
-                localStorage.setItem('analysisResults', JSON.stringify(data.results));
-                window.location.href = 'ImportResult.php';
-            } else {
-                alert('No results found.');
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching results:', error);
-            alert('Error fetching results: ' + error.message);
-        });
+    method: 'POST',
+    body: formData
+})
+.then(response => response.json())
+.then(data => {
+    if (data.results) {
+        // Save results to localStorage and redirect
+        localStorage.setItem('analysisResults', JSON.stringify(data.results));
+        window.location.href = 'ImportResult.php';
+    } else {
+        alert('No results found.');
+    }
+})
+.catch(error => {
+    console.error('Error fetching results:', error);
+    alert('Error fetching results: ' + error.message);
+});
+
     });
 });
+
+
+
 
 
         function showLogoutConfirmation() {
