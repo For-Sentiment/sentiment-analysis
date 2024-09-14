@@ -22,6 +22,6 @@ $sentiment = $sentiment_data['sentiment'];
 $cleaned_comment = $sentiment_data['comment'];
 
 // Redirect to result.php with sentiment data
-header('Location: result.php?sentiment=' . urlencode($sentiment) . '&comment=' . urlencode($cleaned_comment));
+header('Location: Result.php?sentiment=' . urlencode($sentiment) . '&comment=' . urlencode($cleaned_comment));
 exit();
 ?>
