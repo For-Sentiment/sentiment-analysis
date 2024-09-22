@@ -10,13 +10,13 @@ if (!isset($_SESSION['user'])) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<link rel="shortcut icon" type="x-icon" href="images/logoo1.png">
-<title>NLP Real-Time Analysis</title>
-<style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="shortcut icon" type="x-icon" href="images/logoo1.png">
+    <title>NLP Real-Time Analysis</title>
+    <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -28,7 +28,7 @@ if (!isset($_SESSION['user'])) {
         }
 
         .sidebar {
-            width: 29.5%;
+            width: 19.5%;
             height: 99.3%;
             background-color: #2e4c8d;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -42,75 +42,89 @@ if (!isset($_SESSION['user'])) {
             transition: filter 0.3s ease;
         }
 
-       .blurred {
+        .blurred {
         filter: blur(5px);
         pointer-events: none;
     }
 
-        .notification, .logout-confirmation {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: white;
-            padding: 20px 50px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            text-align: center;
-            display: none;
-        }
-        .notification button, .logout-confirmation button {
-            padding: 10px 50px;
-            background-color: white;
-            color: black;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: large;
-            font-weight: bolder;
-        }
+    .notification, .logout-confirmation {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 20px 50px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        text-align: center;
+        display: none;
+    }
 
-        .notification button:hover, .logout-confirmation button:hover {
-            background-color: #3b5998;
-        }
+    .notification h2, .logout-confirmation h2 {
+        margin: 0 0 20px 0;
+    }
 
-        .logout-confirmation button {
-            margin: 0 10px;
-        }
+    .notification button, .logout-confirmation button {
+        padding: 10px 50px;
+        background-color: white;
+        color: black;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: large;
+        font-weight: bolder;
+    }
 
-        .dashboard {
+    .notification button:hover, .logout-confirmation button:hover {
+        background-color: #3b5998;
+    }
+
+    .logout-confirmation button {
+        margin: 0 10px;
+    }
+
+    .dashboard {
         text-align: left;
         color: white;
         position: absolute;
         top: 10%;
-        left: 6%;
-        padding: 0;
+        left: 1%;
+        padding: 50px;
         margin: 0;
-        font-size: 23px;
+        font-size: 19px;
         font-family: 'Open Sans';
         display: flex;
         flex-direction: column;
         height: 80%;
-        }
+    }
 
-        .dashboard p {
-        line-height: 1.1;   
-        margin-bottom: 20px;  
-        }
+    .dashboard p {
+        position: absolute;
+        line-height: 1.1;
+        margin-top: -100px;
+        right: 40px;
+        margin-bottom: 0;
+    }
 
-        .dashboard ul {
-        padding: 0;
-        margin: 0;
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        }
+    .dashboard ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Spread items evenly */
+    height: 100%;
+}
 
-        .dashboard .top-items {
+
+    .dashboard .top-items {
+        position: absolute;
         display: flex;
         flex-direction: column;
     }
+
+    
 
     .dashboard .bottom-items {
         margin-top: auto;
@@ -118,30 +132,27 @@ if (!isset($_SESSION['user'])) {
         flex-direction: column;
     }
 
+    .dashboard li {
+    margin-bottom: 20px; /* Ensure space between each item */
+}
 
-        .dashboard ul li {
-        padding-left: 10px;
-        margin-top: 20px;
-        list-style-type: none;
-        }
+.dashboard a {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    display: block;
+    font-size: 18px;
+}
 
-        .dashboard li a {
-        color: white;
-        line-height: 1.5;
-        margin-bottom: 5px;
-        text-decoration: none;
-        font-weight: normal;
-        transition: font-weight 0.1s ease-in-out;
+.dashboard a:hover {
+    font-weight: 600; 
+}
+    
 
-        }
 
-        .dashboard a:hover {
-            font-weight: 600; 
-        }
-
-        .facebook-logo {
+.facebook-logo {
         position: absolute;
-        right: 30px; 
+        right: 290px; 
         top: 0;
         background-color: #2e4c8d;
         color: white;
@@ -152,18 +163,19 @@ if (!isset($_SESSION['user'])) {
         width: 40px;
         height: 95%;
         line-height: 20px;
-        font-size: 90px;   
-        }
+        font-size: 90px;
+    }
 
-        .dashboard-icon {
+
+    .dashboard-icon {
         position: relative;
-        padding-left: 24px;
+        padding-left: 35px;
     }
 
     .dashboard-icon::before {
         content: '';
         position: absolute;
-        left: 0;
+        left: 10px;
         top: 50%;
         transform: translateY(-50%);
         width: 30px;
@@ -219,7 +231,7 @@ if (!isset($_SESSION['user'])) {
         transform: translateY(-50%);
         width: 30px;
         height: 30px;
-        background-image: url('images/user.png');
+        background-image: url('images/account.png');
         background-size: cover;
     }
 
@@ -240,9 +252,14 @@ if (!isset($_SESSION['user'])) {
         background-size: cover;
     }
 
+    .dashboard-icon::before, .realtime-icon::before, .sentiment-icon::before, 
+.acc-icon::before, .logout-icon::before {
+    left: -20px; /* Adjust this for better alignment */
+}
+
     .main-content {
     margin-top: -20px;
-    margin-left: 540px; 
+    margin-left: 400px; 
     display: flex;
     flex-direction: column; 
     justify-content: flex-start;
@@ -252,10 +269,10 @@ if (!isset($_SESSION['user'])) {
 
     .main-content h1 {
     color: white;
-    font-size: 50px;
+    font-size: 45px;
     font-family: Arial Black, sans-serif; 
     margin-bottom: 10px;
-    margin-right: 30%;
+    margin-right: 10px;
 }
 
 .main-content p {
@@ -304,7 +321,7 @@ if (!isset($_SESSION['user'])) {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 430px;
+    margin-top: 480px;
     margin-right: 350px;
 }
 
@@ -364,12 +381,12 @@ if (!isset($_SESSION['user'])) {
     margin-top: 650px;
     margin-right: 370px;
 }
-
-</style>
+    </style>
 </head>
 <body>
+    <!-- Sidebar content... -->
 
-<div class="sidebar">
+    <div class="sidebar">
     <div class="facebook-logo">
         <i class="fab fa-facebook-f"></i>
     </div>
@@ -390,34 +407,40 @@ if (!isset($_SESSION['user'])) {
 </div>
 </div>
 
-<div class="main-content">
-        <h1>REAL TIME <br> SENTIMENT ANALYSIS</h1>
-        <p>Update the Facebook link weekly.</p>
-        <div class="emoji-container">
-            <div class="Positive">
-                <img src="images/happy.png" alt="Positive">
-            </div>
-            <div class="Neutral">
-                <img src="images/neutral.png" alt="Neutral">
-            </div>
-            <div class="Negative">
-                <img src="images/aangryy.png" alt="Negative">
-            </div>
-
-            
-<div class="search-container">
-    <form action="RealTresult.php" method="POST">
-        <div class="search-box">
-            <input type="text" id="comment" name="comment" placeholder="Link To Facebook Post" required>
-            <button type="submit" class="search-btn">
-                <i class="search-icon">&#128269;</i>
-            </button>
-        </div>
-    </form>
 </div>
 
+<div class="main-content">
+<h1>REAL TIME SENTIMENT ANALYSIS</h1>
+    <p>Update the Facebook link weekly.</p>
 
-    <div class="facebooklogo">
+    <div class="search-container">  
+        <form action="RealTresult.php" method="POST">
+            <div class="search-box">    
+                <input type="text" id="comment" name="fb_url" placeholder="Link To Facebook Post" required>
+                <button type="submit" class="search-btn">
+                    <i class="search-icon">&#128269;</i>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Emoji section (static emojis) -->
+    <div class="emoji-container">
+        <div class="Positive">
+            <img src="images/happy.png" alt="Positive">
+        </div>
+        <div class="Neutral">
+            <img src="images/neutral.png" alt="Neutral">
+        </div>
+        <div class="Negative">
+            <img src="images/aangryy.png" alt="Negative">
+        </div>
+    </div>
+</div>
+
+<!-- Notification, logout confirmation, and scripts (unchanged)... -->
+
+<div class="facebooklogo">
         <i class="fab fa-facebook-f"></i>
     </div>
 
