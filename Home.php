@@ -5,7 +5,15 @@ if (!isset($_SESSION['user'])) {
     header('Location: index.php');
     exit();
 }
+
+// Check if login notification should be shown
+$showNotification = false;
+if (isset($_SESSION['login_success']) && $_SESSION['login_success'] === true) {
+    $showNotification = true;
+    unset($_SESSION['login_success']); // Unset it so it doesn't show again
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -14,8 +22,8 @@ if (!isset($_SESSION['user'])) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<link rel="shortcut icon" type="x-icon" href="images/logoo1.png">
-<title>Home-Dashboards</title>
+<link rel="shortcut icon" type="x-icon" href="logoo1.png">
+<title>Home</title>
 <style>
     body {
         font-family: 'Open Sans';
@@ -31,7 +39,8 @@ if (!isset($_SESSION['user'])) {
 
     .content {
         position: relative;
-        width: 29.5%;
+        width: 20.5%;
+        right: 80px;
         height: 99.3%;
         background-color: #2e4c8d;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -41,6 +50,8 @@ if (!isset($_SESSION['user'])) {
         align-items: center;
         transition: filter 0.3s ease;
         margin-right: 70%;
+        transition: filter 0.3s ease;
+
     }
 
     .blurred {
@@ -90,10 +101,10 @@ if (!isset($_SESSION['user'])) {
         color: white;
         position: absolute;
         top: 10%;
-        left: 6%;
-        padding: 0;
+        left: 1%;
+        padding: 50px;
         margin: 0;
-        font-size: 23px;
+        font-size: 19px;
         font-family: 'Open Sans';
         display: flex;
         flex-direction: column;
@@ -101,23 +112,31 @@ if (!isset($_SESSION['user'])) {
     }
 
     .dashboard p {
+        position: absolute;
         line-height: 1.1;
-        margin-top: 25px;
+        margin-top: -100px;
+        right: -20px;
         margin-bottom: 0;
     }
 
     .dashboard ul {
-        padding: 0;
-        margin: 0;
-        flex: 1;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Spread items evenly */
+    height: 100%;
+}
+
+
+    .dashboard .top-items {
+        position: absolute;
         display: flex;
         flex-direction: column;
     }
 
-    .dashboard .top-items {
-        display: flex;
-        flex-direction: column;
-    }
+    
 
     .dashboard .bottom-items {
         margin-top: auto;
@@ -125,28 +144,27 @@ if (!isset($_SESSION['user'])) {
         flex-direction: column;
     }
 
-    .dashboard ul li {
-        padding-left: 10px;
-        margin-top: 20px;
-        list-style-type: none;
-    }
+    .dashboard li {
+    margin-bottom: 20px; /* Ensure space between each item */
+}
 
-    .dashboard li a {
-        color: white;
-        line-height: 1.5;
-        margin-bottom: 5px;
-        text-decoration: none;
-        font-weight: normal;
-        transition: font-weight 0.1s ease-in-out;
-    }
+.dashboard a {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    display: block;
+    font-size: 18px;
+}
 
-    .dashboard a:hover {
-        font-weight: 600;
-    }
+.dashboard a:hover {
+    font-weight: 600; 
+}
+    
+
 
     .facebook-logo {
         position: absolute;
-        right: 30px; 
+        right: 260px; 
         top: 0;
         background-color: #2e4c8d;
         color: white;
@@ -162,13 +180,13 @@ if (!isset($_SESSION['user'])) {
 
     .dashboard-icon {
         position: relative;
-        padding-left: 24px;
+        padding-left: 35px;
     }
 
     .dashboard-icon::before {
         content: '';
         position: absolute;
-        left: 0;
+        left: 10px;
         top: 50%;
         transform: translateY(-50%);
         width: 30px;
@@ -224,7 +242,7 @@ if (!isset($_SESSION['user'])) {
         transform: translateY(-50%);
         width: 30px;
         height: 30px;
-        background-image: url('images/user.png');
+        background-image: url('images/account.png');
         background-size: cover;
     }
 
@@ -244,6 +262,12 @@ if (!isset($_SESSION['user'])) {
         background-image: url('images/logout.png');
         background-size: cover;
     }
+
+    .dashboard-icon::before, .realtime-icon::before, .sentiment-icon::before, 
+.acc-icon::before, .logout-icon::before {
+    left: -20px; /* Adjust this for better alignment */
+}
+
 
     .dashboard-layout {
         position: absolute;
@@ -289,10 +313,10 @@ if (!isset($_SESSION['user'])) {
 
         <ul>
             <li class="top-items">
-                <li><a href="home.php" class="dashboard-icon"> &nbsp; Dashboard</a></li>
-                <li><a href="RealTAnalysis.php" class="realtime-icon"> &nbsp; Realtime Sentiment Analysis</a></li>
+                <li><a href="Dashboard.php" class="dashboard-icon"> &nbsp; Dashboard</a></li>
+                <li><a href="RealTAnalysis.php" class="realtime-icon"> &nbsp; Realtime Sentiment <br class="Analys"> Analysis</a></li>
                 <li><a href="SentAnalysis.php" class="sentiment-icon"> &nbsp; Sentiment Analysis</a></li>
-            </li>
+                </li>
             <li class="bottom-items">
                 <li><a href="Account.php" class="acc-icon"> &nbsp; Account</a></li>
                 <li><a href="#" onclick="showLogoutConfirmation()" class="logout-icon"> &nbsp; Logout</a></li>
@@ -371,6 +395,7 @@ if (!isset($_SESSION['user'])) {
     document.addEventListener('DOMContentLoaded', function() {
         showNotification();
     });
+    
 </script>
 </body>
 </html>
