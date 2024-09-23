@@ -4,6 +4,7 @@ from flask import Flask, request, jsonify
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 import os
 from flask_cors import CORS
+import requests  # Added to support HTTP requests
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -11,7 +12,6 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 analyzer = SentimentIntensityAnalyzer()
 
 def clean_comment(comment):
-    # Remove emojis, special characters, and repeated expressions like "haha", "huhu", "hehe"
     comment = re.sub(r'[^\w\s]', '', comment)  # Remove special characters
     comment = re.sub(r'\b(?:ha)+\b|\b(?:h[ue]){2,}\b', '', comment, flags=re.IGNORECASE)  # Remove repeated laughs and cries
     comment = re.sub(r'\s+', ' ', comment).strip()  # Remove extra spaces
@@ -20,31 +20,18 @@ def clean_comment(comment):
 @app.route('/analyze', methods=['POST'])
 def analyze_sentiment():
     try:
-        # Get the comment from the request
         comment = request.json.get('comment', '')
-
-        # Normalize the comment
-        comment = comment.lower()  # Convert to lowercase
-        comment = re.sub(r'[^\w\s]', '', comment)  # Remove special characters
-
-        # Analyze sentiment
+        comment = comment.lower()
+        comment = re.sub(r'[^\w\s]', '', comment)
         sentiment_scores = analyzer.polarity_scores(comment)
         compound_score = sentiment_scores['compound']
-
         if compound_score >= 0.05:
             sentiment = "positive"
         elif compound_score <= -0.05:
             sentiment = "negative"
         else:
             sentiment = "neutral"
-
-        # Log for debugging
-        app.logger.debug(f"Comment: {comment}")
-        app.logger.debug(f"Sentiment Scores: {sentiment_scores}")
-        app.logger.debug(f"Sentiment: {sentiment}")
-
         return jsonify({"sentiment": sentiment, "comment": comment})
-
     except Exception as e:
         return jsonify({'error': str(e)})
 
@@ -53,32 +40,20 @@ def upload_csv():
     try:
         if 'file' not in request.files:
             return jsonify({'error': 'No file part'})
-
         file = request.files['file']
         if file.filename == '':
             return jsonify({'error': 'No selected file'})
-
-        # Save the uploaded file to a temporary location
         file_path = os.path.join('uploads', file.filename)
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
         file.save(file_path)
-
-        # Read the file
         df = pd.read_csv(file_path)
-
-        # Check if the required column is present
         if 'Comment' not in df.columns:
             return jsonify({'error': 'No "Comment" column found in the file'})
-
         results = []
-        for comment in df['Comment'].dropna():  # Drop any NaN values
-            comment = str(comment).strip()  # Convert to string and strip whitespace
-            cleaned_comment = clean_comment(comment)  # Clean the comment
-
-            # Analyze the sentiment
+        for comment in df['Comment'].dropna():
+            cleaned_comment = clean_comment(comment)
             sentiment_scores = analyzer.polarity_scores(cleaned_comment)
             compound_score = sentiment_scores['compound']
-
             if compound_score >= 0.05:
                 sentiment = "positive"
                 emoji = '😊'
@@ -88,16 +63,54 @@ def upload_csv():
             else:
                 sentiment = "neutral"
                 emoji = '😐'
-
             results.append({
-                'comment': cleaned_comment,  # Add cleaned comment
+                'comment': cleaned_comment,
                 'sentiment': sentiment,
                 'emoji': emoji,
                 'score': compound_score
             })
-
         return jsonify({'results': results})
+    except Exception as e:
+        return jsonify({'error': str(e)})
 
+# Inserted new Facebook comments fetch route
+@app.route('/fetch_facebook_comments', methods=['POST'])
+def fetch_facebook_comments():
+    try:
+        access_token = 'EAAGZCpxXYvfcBO5HqcSWZAzaOJjzEmGYSWCmUgAjpzIXD37SvjZCXZAqXRZCNAIdeS454bP0sDVr53qMJkZB0s7IhCaN8RbmaRzkdPIu26JmOnTHaSSqfIgtWqlZAO94ZBBE0ZBN0rBWmz1TLov6UWPLmeJBlgJeIHZBanvGUtiMsjLAfGnZBZAftZCp65TOTxGOneTQsnS1uvuTyZAOuCDtCw5QZDZD'  # Replace with your valid access token
+        post_id = request.json.get('post_id')
+        if not post_id:
+            return jsonify({'error': 'No post_id provided'}), 400
+        url = f'https://graph.facebook.com/v20.0/{post_id}?fields=comments&access_token={access_token}'
+        response = requests.get(url)
+        if response.status_code != 200:
+            return jsonify({'error': f'Error: {response.status_code} - {response.json()}'})
+        comments_data = response.json()
+        comments = []
+        for comment in comments_data.get('comments', {}).get('data', []):
+            if 'message' in comment:
+                comments.append(comment['message'])
+        results = []
+        for comment in comments:
+            cleaned_comment = clean_comment(comment)
+            sentiment_scores = analyzer.polarity_scores(cleaned_comment)
+            compound_score = sentiment_scores['compound']
+            if compound_score >= 0.05:
+                sentiment = "positive"
+                emoji = '😊'
+            elif compound_score <= -0.05:
+                sentiment = "negative"
+                emoji = '😠'
+            else:
+                sentiment = "neutral"
+                emoji = '😐'
+            results.append({
+                'comment': cleaned_comment,
+                'sentiment': sentiment,
+                'emoji': emoji,
+                'score': compound_score
+            })
+        return jsonify({'results': results})
     except Exception as e:
         return jsonify({'error': str(e)})
 
