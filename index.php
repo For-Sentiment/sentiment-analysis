@@ -6,30 +6,29 @@
     <title>Log In</title>
     <link rel="shortcut icon" type="x-icon" href="images/logoo1.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #b0c4de;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .main-div {
-            background-color: #dfe3ee;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            position: absolute;
-            padding: 20px;
-            border-radius: 15px;
-            width: 1250px;
-            height: 530px;
-            margin-left: 3%;
-            margin-right: 3%;
-        }
-        .div-form {
+body {
+    font-family: Arial, sans-serif;
+    background-color: #b0c4de;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.main-div {
+    background-color: #dfe3ee;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 15px;
+    width: 100%;
+    max-width: 900px; /* Max width ensures it doesn’t go too wide on large screens */
+    margin: 0 20px; /* Ensure some space on small screens */
+}
+
+.div-form {
             text-align: center;
             background-color: #3b5998;
             padding: 20px;
@@ -48,6 +47,7 @@
             margin-bottom: 20px;
             color: white;
         }
+
         .form-group {
             margin-bottom: 15px;
             position: relative;
@@ -91,6 +91,45 @@
             color: #3b5998;
             user-select: none;
         }
+
+/* Media Queries for responsive design */
+@media (max-width: 768px) {
+    .admin-login {
+        font-size: 30px;
+    }
+
+    .div-form {
+        padding: 15px;
+    }
+
+    .form-group input {
+        height: 40px;
+    }
+
+    #logButton {
+        font-size: 16px;
+        padding: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-login {
+        font-size: 24px;
+    }
+
+    .div-form img {
+        width: 40px;
+    }
+
+    .form-group input {
+        height: 35px;
+    }
+
+    #logButton {
+        font-size: 14px;
+    }
+}
+
     </style>
 </head>
 <body>
