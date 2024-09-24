@@ -26,11 +26,11 @@ def analyze_sentiment():
         sentiment_scores = analyzer.polarity_scores(comment)
         compound_score = sentiment_scores['compound']
         if compound_score >= 0.05:
-            sentiment = "POSITIVE"
+            sentiment = "positive"
         elif compound_score <= -0.05:
-            sentiment = "NEGATIVE"
+            sentiment = "negative"
         else:
-            sentiment = "NEUTRAL"
+            sentiment = "neutral"
         return jsonify({"sentiment": sentiment, "comment": comment})
     except Exception as e:
         return jsonify({'error': str(e)})
@@ -55,13 +55,13 @@ def upload_csv():
             sentiment_scores = analyzer.polarity_scores(cleaned_comment)
             compound_score = sentiment_scores['compound']
             if compound_score >= 0.05:
-                sentiment = "POSITIVE"
+                sentiment = "positive"
                 emoji = '😊'
             elif compound_score <= -0.05:
-                sentiment = "NEGATIVE"
+                sentiment = "negative"
                 emoji = '😠'
             else:
-                sentiment = "NEUTRAL"
+                sentiment = "neutral"
                 emoji = '😐'
             results.append({
                 'comment': cleaned_comment,
@@ -96,13 +96,13 @@ def fetch_facebook_comments():
             sentiment_scores = analyzer.polarity_scores(cleaned_comment)
             compound_score = sentiment_scores['compound']
             if compound_score >= 0.05:
-                sentiment = "POSITITVE"
+                sentiment = "positive"
                 emoji = '😊'
             elif compound_score <= -0.05:
-                sentiment = "NEGATIVE"
+                sentiment = "negative"
                 emoji = '😠'
             else:
-                sentiment = "NEUTRAL"
+                sentiment = "neutral"
                 emoji = '😐'
             results.append({
                 'comment': cleaned_comment,
