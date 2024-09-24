@@ -430,13 +430,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 results.forEach(result => {
                     let emojiSrc;
                     switch(result.sentiment) {
-                        case 'POSITIVE':
+                        case 'positive':
                             emojiSrc = 'images/happy.png';
                             break;
-                        case 'NEUTRAL':
+                        case 'neutral':
                             emojiSrc = 'images/neutral.png';
                             break;
-                        case 'NEGATIVE':
+                        case 'negative':
                             emojiSrc = 'images/aangryy.png';
                             break;
                         default:
