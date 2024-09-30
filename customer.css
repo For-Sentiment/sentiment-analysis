@@ -1,0 +1,173 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body Styling */
+body {
+    font-family: Arial, sans-serif;
+    color: #333;
+    padding-top: 60px;
+    margin: 0;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* Smooth Scroll */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar styling for webkit-based browsers (Chrome, Safari) */
+::-webkit-scrollbar {
+    width: 10px; /* Width of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+    background: #2e4c8d; /* Background color of the scrollbar track */
+}
+
+::-webkit-scrollbar-thumb {
+    background: #555; /* Color of the scrollbar handle */
+    border-radius: 5px; /* Rounded corners of the scrollbar handle */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #888; /* Color on hover */
+}
+
+/* Firefox scrollbar styling */
+* {
+    scrollbar-width: thin; /* Set scrollbar width */
+    scrollbar-color: #555 #2e4c8d; /* Handle color and track color */
+}
+
+/* Background Image with Blur Effect */
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('images/bg.jpg') no-repeat center center/cover; /* Replace with your image */
+    filter: blur(8px); /* Blur effect */
+    z-index: -2; /* Behind everything */
+}
+
+/* Overlay Effect */
+body::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #456bb656; /* Semi-transparent overlay */
+    z-index: -1; /* Behind content but over the background image */
+}
+
+/* Navigation Bar Styling */
+nav {
+    background-color: #2e4c8d;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px; /* Padding for nav */
+    z-index: 10; /* In front of the background */
+}
+
+.logo {
+    height: auto; /* Adjust height automatically */
+    width: 200px; /* Set a specific width for the logo */
+    margin-right: auto; /* Pushes nav links to the right */
+    margin-top: 30px; /* Adjust this value to lower the logo */
+    margin-left: 30px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px; /* Space between links */
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 15px;
+    font-size: 15px;
+    transition: font-weight 0.3s, transform 0.3s; /* Smooth transition */
+}
+
+nav a:hover {
+    transform: scale(1.1); /* Slightly enlarge the link */
+}
+
+/* Active Link Styling */
+nav a.active {
+    font-size: 20px; 
+    font-weight: bold; /* Make the active link bold */
+    text-decoration: none; /* Underline the active link */
+}
+
+/* Section Styling */
+section {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent background for content */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1; /* In front of the background */
+    position: relative;
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Footer Styling */
+footer {
+    background-color: #2e4c8d44; /* Match nav color */
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    margin-top: 663px; /* Space above footer */
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    nav {
+        flex-direction: column; /* Stack logo and nav links vertically */
+        align-items: flex-start; /* Align items to the start */
+        height: auto; /* Allow height to adjust based on content */
+    }
+
+    .nav-links {
+        flex-direction: column; /* Stack links vertically */
+        gap: 10px; /* Adjust space between links */
+        padding: 10px 0; /* Add some padding */
+    }
+
+    nav a {
+        font-size: 14px; /* Adjust font size for smaller screens */
+    }
+
+    .logo {
+        width: 150px; /* Adjust logo size for mobile */
+        margin-top: 10px; /* Adjust margin as needed */
+    }
+
+    section {
+        padding: 15px; /* Reduce padding for smaller screens */
+        margin: 10px; /* Adjust margin for mobile */
+
+    }
+}
