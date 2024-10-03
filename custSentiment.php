@@ -146,7 +146,7 @@ html {
     justify-content: center;
     align-items: center;
     margin-top: 20px;
-    margin-right: -90px;
+    margin-right: -40px;
 }
 
 .Positive img, .Neutral img, .Negative img {
@@ -243,25 +243,20 @@ html {
 </head>
 <body>
 
-    <!-- Navigation Bar -->
-    <nav>
-        <!-- Logo on the left -->
-        <img src="images/sentlogo.png" alt="Logo" class="logo">
-        
-       <!-- Navigation Links -->
-      <!-- Navigation Links -->
-      <div class="nav-links">
-      <a href="Customer.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'Customer.php' ? 'active' : ''; ?>">Home</a>
-      <a href="custDashboard.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'custDashboard.php' ? 'active' : ''; ?>">Dashboard</a>
-            <a href="custRealtime.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'custRealtime.php' ? 'active' : ''; ?>">Real-Time Sentiment Analysis</a>
-            <a href="custSentiment.php" class="<?php echo (basename($_SERVER['PHP_SELF']) == 'custSentiment.php' || 
-                basename($_SERVER['PHP_SELF']) == 'custtypeown.php' || 
-                basename($_SERVER['PHP_SELF']) == 'custImport.php' || 
-                basename($_SERVER['PHP_SELF']) == 'custImportresult.php' || 
-                basename($_SERVER['PHP_SELF']) == 'custtyperesult.php') ? 'active' : ''; ?>">Sentiment Analysis</a>
-            <a href="custAbout.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'custAbout.php' ? 'active' : ''; ?>">About Us</a>
-        </div>
-    </nav>
+<nav>
+    <img src="images/sentlogo.png" alt="Logo" class="logo">
+    <div class="nav-links">
+        <a href="Customer.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'Customer.php' ? 'active' : ''; ?>">Home</a>
+        <a href="custDashboard.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'custDashboard.php' ? 'active' : ''; ?>">Dashboard</a>
+        <a href="custRealtime.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'custRealtime.php' ? 'active' : ''; ?>">Real-Time Sentiment Analysis</a>
+        <a href="custSentiment.php" class="<?php echo (basename($_SERVER['PHP_SELF']) == 'custSentiment.php' || basename($_SERVER['PHP_SELF']) == 'custtypeown.php' || basename($_SERVER['PHP_SELF']) == 'custImport.php' || basename($_SERVER['PHP_SELF']) == 'custImportresult.php' || basename($_SERVER['PHP_SELF']) == 'custtyperesult.php') ? 'active' : ''; ?>">Sentiment Analysis</a>
+        <a href="custAbout.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'custAbout.php' ? 'active' : ''; ?>">About Us</a>
+        <a href="custLogin.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'custLogin.php' ? 'active' : ''; ?>">Login</a>
+
+        <!-- Sign Up link with custom class -->
+        <a href="custSignup.php" class="signup-link <?php echo basename($_SERVER['PHP_SELF']) == 'custSignup.php' ? 'active' : ''; ?>">Sign Up</a>
+    </div>
+</nav>
 
 <div class="main-content">
         <h1>SENTIMENT ANALYSIS</h1>
@@ -283,7 +278,7 @@ html {
         <div class="import-icon">
             <a href="custImport.php"><img src="images/custImport.png" alt="import live"></a>
             <h2>Import Live Comments</h2>
-            <p> You can import live Facebook <br> comments by using FB Post Link or hashtag <br> and perform sentiment analysis.</p>
+            <p> You can import live Facebook <br> comments by using FB Post Link <br> and perform sentiment analysis.</p>
         </div>
         <div class="type-icon">
             <a href="custtypeown.php"><img src="images/ownn.png" alt="Own Comment"></a>
