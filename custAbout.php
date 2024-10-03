@@ -215,16 +215,19 @@
 <body>
     <!-- Navigation Bar -->
     <nav>
-        <img src="images/sentlogo.png" alt="Logo" class="logo">
-        <div class="nav-links">
-            <a href="Customer.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'Customer.php' ? 'active' : ''; ?>">Home</a>
-            <a href="custDashboard.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'custDashboard.php' ? 'active' : ''; ?>">Dashboard</a>
-            <a href="custRealtime.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'custRealtime.php' ? 'active' : ''; ?>">Real-Time Sentiment Analysis</a>
-            <a href="custSentiment.php" class="<?php echo (basename($_SERVER['PHP_SELF']) == 'custSentiment.php' || basename($_SERVER['PHP_SELF']) == 'custtypeown.php' || basename($_SERVER['PHP_SELF']) == 'custImport.php' || basename($_SERVER['PHP_SELF']) == 'custImportresult.php' || basename($_SERVER['PHP_SELF']) == 'custtyperesult.php') ? 'active' : ''; ?>">Sentiment Analysis</a>
-            <a href="custAbout.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'custAbout.php' ? 'active' : ''; ?>">About Us</a>
-        </div>
-    </nav>
+    <img src="images/sentlogo.png" alt="Logo" class="logo">
+    <div class="nav-links">
+        <a href="Customer.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'Customer.php' ? 'active' : ''; ?>">Home</a>
+        <a href="custDashboard.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'custDashboard.php' ? 'active' : ''; ?>">Dashboard</a>
+        <a href="custRealtime.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'custRealtime.php' ? 'active' : ''; ?>">Real-Time Sentiment Analysis</a>
+        <a href="custSentiment.php" class="<?php echo (basename($_SERVER['PHP_SELF']) == 'custSentiment.php' || basename($_SERVER['PHP_SELF']) == 'custtypeown.php' || basename($_SERVER['PHP_SELF']) == 'custImport.php' || basename($_SERVER['PHP_SELF']) == 'custImportresult.php' || basename($_SERVER['PHP_SELF']) == 'custtyperesult.php') ? 'active' : ''; ?>">Sentiment Analysis</a>
+        <a href="custAbout.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'custAbout.php' ? 'active' : ''; ?>">About Us</a>
+        <a href="custLogin.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'custLogin.php' ? 'active' : ''; ?>">Login</a>
 
+        <!-- Sign Up link with custom class -->
+        <a href="custSignup.php" class="signup-link <?php echo basename($_SERVER['PHP_SELF']) == 'custSignup.php' ? 'active' : ''; ?>">Sign Up</a>
+    </div>
+</nav>
     <!-- About Us Section -->
     <div class="about-container">
         <div class="about-header">
@@ -259,7 +262,7 @@
                 text: "We specialize in analyzing user feedback and comments to better understand people's feelings and opinions. Our application uses a powerful tool called SentimentIntensityAnalyzer to evaluate the sentiment of each comment. We clean the comments by removing special characters and repeated phrases, and then we classify them as positive, negative, or neutral based on their overall sentiment. This process helps us gain valuable insights, allowing us to respond effectively to feedback and improve user experiences."
             },
             {
-                image: "images/slide2.png",
+                image: "images/slayd2.png",
                 text: "In sentiment analysis, polarity refers to the emotional tone of text, which can be positive, negative, or neutral, and is determined by the specific words used. For example, in the sentence 'I love the new design, but I hate the price,' the word 'love' contributes a strong positive sentiment, while 'hate' carries a strong negative sentiment. Each word is assigned a sentiment score, with positive words like 'love' scoring high and negative words like 'hate' scoring low. The overall sentiment is determined by calculating a compound score from these individual scores; if the negative score outweighs the positive, the sentence is classified as negative, even if it contains positive words. This analysis highlights how the strength and weight of words shape the overall sentiment expressed in a sentence."
             }
         ];
@@ -269,23 +272,19 @@
         const illustrationImg = document.getElementById("slideshow-image");
         const slideshowText = document.getElementById("slideshow-text");
 
-        // Function to update the slideshow content
         function updateSlideshow() {
             illustrationImg.src = slideshowData[currentIndex].image;
             slideshowText.textContent = slideshowData[currentIndex].text;
 
-            // Fade out image and text
             illustrationImg.style.opacity = 0; 
             slideshowText.style.opacity = 0; 
 
-            // After fade out, update image and text and fade them back in
             setTimeout(() => {
                 illustrationImg.style.opacity = 1; // Fade in effect for image
                 slideshowText.style.opacity = 1; // Fade in effect for text
             }, 500);
         }
 
-        // Event listeners for buttons
         document.getElementById("prevBtn").addEventListener("click", () => {
             currentIndex = (currentIndex > 0) ? currentIndex - 1 : slideshowData.length - 1;
             updateSlideshow();
@@ -296,12 +295,10 @@
             updateSlideshow();
         });
 
-        // Add click event listener for zoom effect
         illustrationImg.addEventListener("click", () => {
-            illustrationImg.classList.toggle("zoom"); // Toggle zoom class on click
+            illustrationImg.classList.toggle("zoom"); 
         });
 
-        // Initialize slideshow
         updateSlideshow();
     </script>
 </body>
