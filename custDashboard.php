@@ -51,8 +51,6 @@ html, body {
             overflow-x: hidden; /* Prevent horizontal scrolling */
 
         }
-            
-        
 
         nav .logo {
             width: 150px;
@@ -75,7 +73,11 @@ html, body {
             border-bottom: 2px solid #ffcc00;
         }
 
-        /* Heading Styles */
+
+        /* Default styles for navigation links */
+
+
+/* Heading Styles */
         h1 {
             font-size: 2.5em;
             color: #2e4c8d;
@@ -187,21 +189,20 @@ h1 {
 </head>
 <body>
 
-    <!-- Navigation Bar -->
-    <nav>
-        <img src="images/sentlogo.png" alt="Logo" class="logo">
-        <div class="nav-links">
+<nav>
+    <img src="images/sentlogo.png" alt="Logo" class="logo">
+    <div class="nav-links">
         <a href="Customer.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'Customer.php' ? 'active' : ''; ?>">Home</a>
         <a href="custDashboard.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'custDashboard.php' ? 'active' : ''; ?>">Dashboard</a>
-            <a href="custRealtime.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'custRealtime.php' ? 'active' : ''; ?>">Real-Time Sentiment Analysis</a>
-            <a href="custSentiment.php" class="<?php echo (basename($_SERVER['PHP_SELF']) == 'custSentiment.php' || 
-                basename($_SERVER['PHP_SELF']) == 'custtypeown.php' || 
-                basename($_SERVER['PHP_SELF']) == 'custImport.php' || 
-                basename($_SERVER['PHP_SELF']) == 'custImportresult.php' || 
-                basename($_SERVER['PHP_SELF']) == 'custtyperesult.php') ? 'active' : ''; ?>">Sentiment Analysis</a>
-            <a href="custAbout.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'custAbout.php' ? 'active' : ''; ?>">About Us</a>
-        </div>
-    </nav>
+        <a href="custRealtime.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'custRealtime.php' ? 'active' : ''; ?>">Real-Time Sentiment Analysis</a>
+        <a href="custSentiment.php" class="<?php echo (basename($_SERVER['PHP_SELF']) == 'custSentiment.php' || basename($_SERVER['PHP_SELF']) == 'custtypeown.php' || basename($_SERVER['PHP_SELF']) == 'custImport.php' || basename($_SERVER['PHP_SELF']) == 'custImportresult.php' || basename($_SERVER['PHP_SELF']) == 'custtyperesult.php') ? 'active' : ''; ?>">Sentiment Analysis</a>
+        <a href="custAbout.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'custAbout.php' ? 'active' : ''; ?>">About Us</a>
+        <a href="custLogin.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'custLogin.php' ? 'active' : ''; ?>">Login</a>
+
+        <!-- Sign Up link with custom class -->
+        <a href="custSignup.php" class="signup-link <?php echo basename($_SERVER['PHP_SELF']) == 'custSignup.php' ? 'active' : ''; ?>">Sign Up</a>
+    </div>
+</nav>
 
     <!-- Main Heading -->
     <h1>Sentiment Analysis Dashboard</h1>
