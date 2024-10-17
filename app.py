@@ -104,6 +104,28 @@ def analyze():
 
     return jsonify({'comments': analyzed_comments})
 
+# New route to analyze a single comment
+@app.route('/analyze_comment', methods=['POST'])
+def analyze_comment():
+    """Analyzes a single comment and returns its sentiment."""
+    try:
+        comment = request.json.get('comment', '')
+        comment = comment.lower()
+        comment = re.sub(r'[^\w\s]', '', comment)  # Remove punctuation
+        sentiment_scores = analyzer.polarity_scores(comment)
+        compound_score = sentiment_scores['compound']
+
+        if compound_score >= 0.05:
+            sentiment = "positive"
+        elif compound_score <= -0.05:
+            sentiment = "negative"
+        else:
+            sentiment = "neutral"
+
+        return jsonify({"sentiment": sentiment, "comment": comment})
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
 # Route to upload CSV and analyze comments
 @app.route('/upload_csv', methods=['POST'])
 def upload_csv():
