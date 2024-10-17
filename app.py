@@ -9,6 +9,13 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from flask_cors import CORS
 from playwright.sync_api import sync_playwright
 import requests
+import subprocess
+
+# Ensure Chromium and dependencies are installed
+subprocess.run(["playwright", "install", "--with-deps", "chromium"], check=True)
+
+# Rest of your app code...
+
 
 # Initialize Flask app and CORS
 app = Flask(__name__)
