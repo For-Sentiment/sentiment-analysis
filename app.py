@@ -11,11 +11,8 @@ from playwright.sync_api import sync_playwright
 import requests
 import subprocess
 
-# Ensure Chromium and dependencies are installed
-subprocess.run(["playwright", "install", "--with-deps", "chromium"], check=True)
-
-# Rest of your app code...
-
+# Ensure Chromium is installed
+subprocess.run(["playwright", "install", "chromium"], check=True)
 
 # Initialize Flask app and CORS
 app = Flask(__name__)
