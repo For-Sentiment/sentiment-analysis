@@ -12,7 +12,7 @@ import requests
 
 # Initialize Flask app and CORS
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app)  # This will allow all domains. You can restrict it to specific domains if needed.
 
 # Initialize sentiment analyzer
 analyzer = SentimentIntensityAnalyzer()
