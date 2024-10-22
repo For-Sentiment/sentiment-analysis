@@ -10,7 +10,6 @@ from playwright.sync_api import sync_playwright
 import requests
 import subprocess
 from transformers import pipeline
-import emoji
 
 # Ensure Chromium is installed
 subprocess.run(["playwright", "install", "chromium"], check=True)
@@ -28,12 +27,10 @@ def clean_comment(comment):
     comment = re.sub(r'@\w+', '', comment)  # Remove mentions
     comment = re.sub(r'Top\s*Fan\s+[A-Za-z\s]+', '', comment, flags=re.IGNORECASE)  # Remove "Top Fan"
     comment = re.sub(r'\d+\s+(minute|hour|day|week|month|year)s?\s*ago|\d+[a-z]', '', comment, flags=re.IGNORECASE)
-    comment = re.sub(r'[^\w\s]', '', comment)  # Remove special characters (punctuation, emojis, etc.)
-    comment = emoji.replace_emoji(comment, replace='')  # Remove emojis
-    comment = ' '.join(comment.split()).strip()  # Remove excess whitespace
-    return comment
+    return ' '.join(comment.split()).strip()
 
 # Facebook comments scraper using Playwright
+# Facebook comments scraper using Playwright with added timeout handling
 def scrape_facebook_comments(post_url):
     """Scrapes comments from a Facebook post using Playwright."""
     start_time = time.time()
