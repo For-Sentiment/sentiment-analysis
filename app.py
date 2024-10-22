@@ -98,7 +98,17 @@ def analyze():
         return jsonify({'error': 'Failed to retrieve comments.'}), 500
 
     # Placeholder for sentiment analysis
-    analyzed_comments = [{'text': comment, 'sentiment': 'unknown', 'emoji': '😐'} for comment in comments]
+    analyzed_comments = []
+    for comment in comments:
+        # Placeholder sentiment analysis logic (replace with your actual logic)
+        sentiment_label = "Positive"  # Example placeholder
+        emoji = '😊' if sentiment_label == 'Positive' else '😐' if sentiment_label == 'Neutral' else '😠'
+
+        analyzed_comments.append({
+            'text': comment,
+            'sentiment': sentiment_label,
+            'emoji': emoji
+        })
 
     return jsonify({'comments': analyzed_comments})
 
@@ -111,8 +121,8 @@ def analyze_comment():
         comment = comment.lower()
         comment = re.sub(r'[^\w\s]', '', comment)  # Remove punctuation
 
-        # Placeholder for sentiment analysis
-        sentiment = 'unknown'  # You can implement another method for sentiment analysis if needed
+        # Placeholder sentiment analysis logic (replace with your actual logic)
+        sentiment = "positive"  # Example placeholder
 
         return jsonify({"sentiment": sentiment, "comment": comment})
     except Exception as e:
@@ -144,14 +154,14 @@ def upload_csv():
         for comment in df['Comment'].dropna():
             cleaned_comment = clean_comment(comment)
 
-            # Placeholder for sentiment analysis
-            sentiment = 'unknown'
-            emoji = '😐'  # Default emoji
+            # Placeholder sentiment analysis logic (replace with your actual logic)
+            sentiment = 'positive'  # Example placeholder
+            emoji = '😊' if sentiment == 'positive' else '😠' if sentiment == 'negative' else '😐'
 
             results.append({
                 'comment': cleaned_comment,
                 'sentiment': sentiment,
-                'emoji': emoji
+                'emoji': emoji,
             })
 
         return jsonify({'results': results})
