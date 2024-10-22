@@ -9,7 +9,6 @@ from flask_cors import CORS
 from playwright.sync_api import sync_playwright
 import requests
 import subprocess
-from transformers import pipeline
 
 # Ensure Chromium is installed
 subprocess.run(["playwright", "install", "chromium"], check=True)
@@ -17,9 +16,6 @@ subprocess.run(["playwright", "install", "chromium"], check=True)
 # Initialize Flask app and CORS
 app = Flask(__name__)
 CORS(app)  # This will allow all domains. You can restrict it to specific domains if needed.
-
-# Initialize sentiment analysis model using transformers
-sentiment_pipeline = pipeline("sentiment-analysis", model="nlptown/bert-base-multilingual-uncased-sentiment")
 
 # Helper function to clean individual comments
 def clean_comment(comment):
@@ -30,7 +26,6 @@ def clean_comment(comment):
     return ' '.join(comment.split()).strip()
 
 # Facebook comments scraper using Playwright
-# Facebook comments scraper using Playwright with added timeout handling
 def scrape_facebook_comments(post_url):
     """Scrapes comments from a Facebook post using Playwright."""
     start_time = time.time()
@@ -87,7 +82,6 @@ def scrape_facebook_comments(post_url):
 
         return list(comments)
 
-
 # Route to analyze sentiment from scraped Facebook comments
 @app.route('/analyze', methods=['POST'])
 def analyze():
@@ -103,19 +97,8 @@ def analyze():
     if not comments:
         return jsonify({'error': 'Failed to retrieve comments.'}), 500
 
-    # Perform sentiment analysis using transformers for multilingual support
-    analyzed_comments = []
-    for comment in comments:
-        result = sentiment_pipeline(comment)[0]
-        label = result['label']
-        sentiment_label = "Positive" if label == '5 stars' else "Neutral" if label == '3 stars' else "Negative"
-        emoji = '😊' if sentiment_label == 'Positive' else '😐' if sentiment_label == 'Neutral' else '😠'
-
-        analyzed_comments.append({
-            'text': comment,
-            'sentiment': sentiment_label,
-            'emoji': emoji
-        })
+    # Placeholder for sentiment analysis
+    analyzed_comments = [{'text': comment, 'sentiment': 'unknown', 'emoji': '😐'} for comment in comments]
 
     return jsonify({'comments': analyzed_comments})
 
@@ -128,10 +111,8 @@ def analyze_comment():
         comment = comment.lower()
         comment = re.sub(r'[^\w\s]', '', comment)  # Remove punctuation
 
-        # Perform sentiment analysis using transformers
-        result = sentiment_pipeline(comment)[0]
-        label = result['label']
-        sentiment = "positive" if label == '5 stars' else "neutral" if label == '3 stars' else "negative"
+        # Placeholder for sentiment analysis
+        sentiment = 'unknown'  # You can implement another method for sentiment analysis if needed
 
         return jsonify({"sentiment": sentiment, "comment": comment})
     except Exception as e:
@@ -163,17 +144,14 @@ def upload_csv():
         for comment in df['Comment'].dropna():
             cleaned_comment = clean_comment(comment)
 
-            # Perform sentiment analysis using transformers
-            result = sentiment_pipeline(cleaned_comment)[0]
-            label = result['label']
-            sentiment = 'positive' if label == '5 stars' else 'negative' if label == '1 star' else 'neutral'
-            emoji = '😊' if sentiment == 'positive' else '😠' if sentiment == 'negative' else '😐'
+            # Placeholder for sentiment analysis
+            sentiment = 'unknown'
+            emoji = '😐'  # Default emoji
 
             results.append({
                 'comment': cleaned_comment,
                 'sentiment': sentiment,
-                'emoji': emoji,
-                'score': result['score']
+                'emoji': emoji
             })
 
         return jsonify({'results': results})
