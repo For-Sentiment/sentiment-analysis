@@ -5,11 +5,12 @@ import csv
 import time
 from io import StringIO
 from flask import Flask, request, jsonify, make_response
-from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from flask_cors import CORS
 from playwright.sync_api import sync_playwright
 import requests
 import subprocess
+from transformers import pipeline
+import emoji
 
 # Ensure Chromium is installed
 subprocess.run(["playwright", "install", "chromium"], check=True)
@@ -18,8 +19,8 @@ subprocess.run(["playwright", "install", "chromium"], check=True)
 app = Flask(__name__)
 CORS(app)  # This will allow all domains. You can restrict it to specific domains if needed.
 
-# Initialize sentiment analyzer
-analyzer = SentimentIntensityAnalyzer()
+# Initialize sentiment analysis model using transformers
+sentiment_pipeline = pipeline("sentiment-analysis", model="nlptown/bert-base-multilingual-uncased-sentiment")
 
 # Helper function to clean individual comments
 def clean_comment(comment):
@@ -27,7 +28,10 @@ def clean_comment(comment):
     comment = re.sub(r'@\w+', '', comment)  # Remove mentions
     comment = re.sub(r'Top\s*Fan\s+[A-Za-z\s]+', '', comment, flags=re.IGNORECASE)  # Remove "Top Fan"
     comment = re.sub(r'\d+\s+(minute|hour|day|week|month|year)s?\s*ago|\d+[a-z]', '', comment, flags=re.IGNORECASE)
-    return ' '.join(comment.split()).strip()
+    comment = re.sub(r'[^\w\s]', '', comment)  # Remove special characters (punctuation, emojis, etc.)
+    comment = emoji.replace_emoji(comment, replace='')  # Remove emojis
+    comment = ' '.join(comment.split()).strip()  # Remove excess whitespace
+    return comment
 
 # Facebook comments scraper using Playwright
 def scrape_facebook_comments(post_url):
@@ -38,44 +42,54 @@ def scrape_facebook_comments(post_url):
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
-        page.goto(post_url)
 
-        # Wait for the comments section to load
-        page.wait_for_selector('div[role="article"]')
-        print(f"Page loaded in {time.time() - start_time:.2f} seconds.")
+        try:
+            # Increase timeout for page navigation to 60 seconds
+            page.goto(post_url, timeout=60000)
 
-        last_height = 0
-        while True:
-            # Scroll to the bottom of the page
-            page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
-            time.sleep(3)  # Adjust based on network speed
+            # Wait for the comments section to load
+            page.wait_for_selector('div[role="article"]')
+            print(f"Page loaded in {time.time() - start_time:.2f} seconds.")
 
-            # Extract comments
-            comment_elements = page.query_selector_all(
-                'div[role="article"] div[dir="auto"]:not([role="presentation"])'
-            )
-            for element in comment_elements:
-                comment_text = element.inner_text()
-                if comment_text:
-                    cleaned_text = clean_comment(comment_text)
-                    comments.add(cleaned_text)
+            last_height = 0
+            while True:
+                # Scroll to the bottom of the page
+                page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+                time.sleep(3)  # Adjust based on network speed
 
-            # Click "Load more comments" if available
-            load_more = page.query_selector('div[role="button"]:has-text("Load more comments")')
-            if load_more:
-                load_more.click()
-                time.sleep(3)
-            else:
-                break  # No more comments to load
+                # Extract comments
+                comment_elements = page.query_selector_all(
+                    'div[role="article"] div[dir="auto"]:not([role="presentation"])'
+                )
+                for element in comment_elements:
+                    comment_text = element.inner_text()
+                    if comment_text:
+                        cleaned_text = clean_comment(comment_text)
+                        comments.add(cleaned_text)
 
-            # Check if the page has scrolled to the bottom
-            new_height = page.evaluate("document.body.scrollHeight")
-            if new_height == last_height:
-                break
-            last_height = new_height
+                # Click "Load more comments" if available
+                load_more = page.query_selector('div[role="button"]:has-text("Load more comments")')
+                if load_more:
+                    load_more.click()
+                    time.sleep(3)
+                else:
+                    break  # No more comments to load
 
-        browser.close()
+                # Check if the page has scrolled to the bottom
+                new_height = page.evaluate("document.body.scrollHeight")
+                if new_height == last_height:
+                    break
+                last_height = new_height
+
+        except TimeoutError:
+            print(f"TimeoutError: The page took too long to load: {post_url}")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+        finally:
+            browser.close()
+
         return list(comments)
+
 
 # Route to analyze sentiment from scraped Facebook comments
 @app.route('/analyze', methods=['POST'])
@@ -92,13 +106,13 @@ def analyze():
     if not comments:
         return jsonify({'error': 'Failed to retrieve comments.'}), 500
 
-    # Perform sentiment analysis
+    # Perform sentiment analysis using transformers for multilingual support
     analyzed_comments = []
     for comment in comments:
-        sentiment_scores = analyzer.polarity_scores(comment)
-        score = sentiment_scores['compound']
-        emoji = '😊' if score > 0 else ('😐' if score == 0 else '😠')
-        sentiment_label = 'Positive' if score > 0 else ('Neutral' if score == 0 else 'Negative')
+        result = sentiment_pipeline(comment)[0]
+        label = result['label']
+        sentiment_label = "Positive" if label == '5 stars' else "Neutral" if label == '3 stars' else "Negative"
+        emoji = '😊' if sentiment_label == 'Positive' else '😐' if sentiment_label == 'Neutral' else '😠'
 
         analyzed_comments.append({
             'text': comment,
@@ -116,15 +130,11 @@ def analyze_comment():
         comment = request.json.get('comment', '')
         comment = comment.lower()
         comment = re.sub(r'[^\w\s]', '', comment)  # Remove punctuation
-        sentiment_scores = analyzer.polarity_scores(comment)
-        compound_score = sentiment_scores['compound']
 
-        if compound_score >= 0.05:
-            sentiment = "positive"
-        elif compound_score <= -0.05:
-            sentiment = "negative"
-        else:
-            sentiment = "neutral"
+        # Perform sentiment analysis using transformers
+        result = sentiment_pipeline(comment)[0]
+        label = result['label']
+        sentiment = "positive" if label == '5 stars' else "neutral" if label == '3 stars' else "negative"
 
         return jsonify({"sentiment": sentiment, "comment": comment})
     except Exception as e:
@@ -155,16 +165,18 @@ def upload_csv():
         results = []
         for comment in df['Comment'].dropna():
             cleaned_comment = clean_comment(comment)
-            sentiment_scores = analyzer.polarity_scores(cleaned_comment)
-            compound_score = sentiment_scores['compound']
-            sentiment = 'positive' if compound_score >= 0.05 else 'negative' if compound_score <= -0.05 else 'neutral'
+
+            # Perform sentiment analysis using transformers
+            result = sentiment_pipeline(cleaned_comment)[0]
+            label = result['label']
+            sentiment = 'positive' if label == '5 stars' else 'negative' if label == '1 star' else 'neutral'
             emoji = '😊' if sentiment == 'positive' else '😠' if sentiment == 'negative' else '😐'
 
             results.append({
                 'comment': cleaned_comment,
                 'sentiment': sentiment,
                 'emoji': emoji,
-                'score': compound_score
+                'score': result['score']
             })
 
         return jsonify({'results': results})
