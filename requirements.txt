@@ -4,3 +4,5 @@ transformers==4.44.2
 pandas==2.2.2
 emoji==2.14.0  # Only if you're using the emoji library
 torch==2.0.1
+gunicorn==23.0.0
+
