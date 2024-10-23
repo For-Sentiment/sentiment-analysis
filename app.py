@@ -2,13 +2,19 @@ import pandas as pd
 import re
 import os
 import csv
+import time
 from io import StringIO
 from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
+from playwright.sync_api import sync_playwright
+import requests
+import subprocess
 from transformers import pipeline
-import emoji  # Ensure you have this library installed if you plan to use it
 
+# Ensure Chromium is installed
+subprocess.run(["playwright", "install", "chromium"], check=True)
 
+# Initialize Flask app and CORS
 app = Flask(__name__)
 CORS(app)  # This will allow all domains. You can restrict it to specific domains if needed.
 
@@ -21,10 +27,66 @@ def clean_comment(comment):
     comment = re.sub(r'@\w+', '', comment)  # Remove mentions
     comment = re.sub(r'Top\s*Fan\s+[A-Za-z\s]+', '', comment, flags=re.IGNORECASE)  # Remove "Top Fan"
     comment = re.sub(r'\d+\s+(minute|hour|day|week|month|year)s?\s*ago|\d+[a-z]', '', comment, flags=re.IGNORECASE)
-    comment = re.sub(r'[^\w\s]', '', comment)  # Remove special characters (punctuation)
-    comment = emoji.replace_emoji(comment, replace='')  # Remove emojis
-    comment = ' '.join(comment.split()).strip()  # Remove excess whitespace
-    return comment
+    return ' '.join(comment.split()).strip()
+
+# Facebook comments scraper using Playwright
+# Facebook comments scraper using Playwright with added timeout handling
+def scrape_facebook_comments(post_url):
+    """Scrapes comments from a Facebook post using Playwright."""
+    start_time = time.time()
+    comments = set()  # Use a set to avoid duplicates
+
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        page = browser.new_page()
+
+        try:
+            # Increase timeout for page navigation to 60 seconds
+            page.goto(post_url, timeout=60000)
+
+            # Wait for the comments section to load
+            page.wait_for_selector('div[role="article"]')
+            print(f"Page loaded in {time.time() - start_time:.2f} seconds.")
+
+            last_height = 0
+            while True:
+                # Scroll to the bottom of the page
+                page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+                time.sleep(3)  # Adjust based on network speed
+
+                # Extract comments
+                comment_elements = page.query_selector_all(
+                    'div[role="article"] div[dir="auto"]:not([role="presentation"])'
+                )
+                for element in comment_elements:
+                    comment_text = element.inner_text()
+                    if comment_text:
+                        cleaned_text = clean_comment(comment_text)
+                        comments.add(cleaned_text)
+
+                # Click "Load more comments" if available
+                load_more = page.query_selector('div[role="button"]:has-text("Load more comments")')
+                if load_more:
+                    load_more.click()
+                    time.sleep(3)
+                else:
+                    break  # No more comments to load
+
+                # Check if the page has scrolled to the bottom
+                new_height = page.evaluate("document.body.scrollHeight")
+                if new_height == last_height:
+                    break
+                last_height = new_height
+
+        except TimeoutError:
+            print(f"TimeoutError: The page took too long to load: {post_url}")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+        finally:
+            browser.close()
+
+        return list(comments)
+
 
 # Route to analyze sentiment from scraped Facebook comments
 @app.route('/analyze', methods=['POST'])
@@ -36,7 +98,7 @@ def analyze():
     if not post_url:
         return jsonify({'error': 'No URL provided'}), 400
 
-    # Scrape comments from Facebook post (implement scrape_facebook_comments function here)
+    # Scrape comments from Facebook post
     comments = scrape_facebook_comments(post_url)
     if not comments:
         return jsonify({'error': 'Failed to retrieve comments.'}), 500
@@ -47,12 +109,12 @@ def analyze():
         result = sentiment_pipeline(comment)[0]
         label = result['label']
         sentiment_label = "Positive" if label == '5 stars' else "Neutral" if label == '3 stars' else "Negative"
-        emoji_char = '😊' if sentiment_label == 'Positive' else '😐' if sentiment_label == 'Neutral' else '😠'
+        emoji = '😊' if sentiment_label == 'Positive' else '😐' if sentiment_label == 'Neutral' else '😠'
 
         analyzed_comments.append({
             'text': comment,
             'sentiment': sentiment_label,
-            'emoji': emoji_char
+            'emoji': emoji
         })
 
     return jsonify({'comments': analyzed_comments})
@@ -63,14 +125,15 @@ def analyze_comment():
     """Analyzes a single comment and returns its sentiment."""
     try:
         comment = request.json.get('comment', '')
-        cleaned_comment = clean_comment(comment)
+        comment = comment.lower()
+        comment = re.sub(r'[^\w\s]', '', comment)  # Remove punctuation
 
         # Perform sentiment analysis using transformers
-        result = sentiment_pipeline(cleaned_comment)[0]
+        result = sentiment_pipeline(comment)[0]
         label = result['label']
-        sentiment = "Positive" if label == '5 stars' else "Neutral" if label == '3 stars' else "Negative"
+        sentiment = "positive" if label == '5 stars' else "neutral" if label == '3 stars' else "negative"
 
-        return jsonify({"sentiment": sentiment, "comment": cleaned_comment})
+        return jsonify({"sentiment": sentiment, "comment": comment})
     except Exception as e:
         return jsonify({'error': str(e)})
 
@@ -103,13 +166,13 @@ def upload_csv():
             # Perform sentiment analysis using transformers
             result = sentiment_pipeline(cleaned_comment)[0]
             label = result['label']
-            sentiment = 'Positive' if label == '5 stars' else 'Negative' if label == '1 star' else 'Neutral'
-            emoji_char = '😊' if sentiment == 'Positive' else '😠' if sentiment == 'Negative' else '😐'
+            sentiment = 'positive' if label == '5 stars' else 'negative' if label == '1 star' else 'neutral'
+            emoji = '😊' if sentiment == 'positive' else '😠' if sentiment == 'negative' else '😐'
 
             results.append({
                 'comment': cleaned_comment,
                 'sentiment': sentiment,
-                'emoji': emoji_char,
+                'emoji': emoji,
                 'score': result['score']
             })
 
@@ -145,3 +208,6 @@ def download_csv():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+subprocess.run(["playwright", "install", "chromium"], check=True)
