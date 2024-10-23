@@ -1,7 +1,6 @@
 Flask==3.0.3
 Flask-Cors==5.0.0
 gunicorn==23.0.0
-transformers==4.44.2
-tensorflow==2.12.0rc0
-
+flair==0.11.1  # Adjust this version as necessary
+requests==2.32.3  # If needed for web scraping
 
