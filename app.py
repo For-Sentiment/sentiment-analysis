@@ -6,25 +6,23 @@ from io import StringIO
 from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
 from transformers import pipeline
+import gc
 
 # Initialize Flask app and CORS
 app = Flask(__name__)
-CORS(app)  # This will allow all domains. You can restrict it to specific domains if needed.
+CORS(app)
 
-# Initialize sentiment analysis model using transformers
+# Initialize sentiment analysis model using a lighter model
 sentiment_pipeline = pipeline("sentiment-analysis", model="nlptown/bert-base-multilingual-uncased-sentiment")
 
 # Helper function to clean individual comments
 def clean_comment(comment):
     """Cleans Facebook comments by removing mentions, timestamps, and other unnecessary text."""
-    comment = re.sub(r'@\w+', '', comment)  # Remove mentions
-    comment = re.sub(r'Top\s*Fan\s+[A-Za-z\s]+', '', comment, flags=re.IGNORECASE)  # Remove "Top Fan"
+    comment = re.sub(r'@\w+', '', comment)
+    comment = re.sub(r'Top\s*Fan\s+[A-Za-z\s]+', '', comment, flags=re.IGNORECASE)
     comment = re.sub(r'\d+\s+(minute|hour|day|week|month|year)s?\s*ago|\d+[a-z]', '', comment, flags=re.IGNORECASE)
-    comment = re.sub(r'[^\w\s]', '', comment)  # Remove special characters (punctuation)
-    comment = emoji.replace_emoji(comment, replace='')  # Remove emojis
-    comment = ' '.join(comment.split()).strip()  # Remove excess whitespace
+    comment = ' '.join(comment.split()).strip()
     return comment
-
 
 # Route to analyze sentiment from scraped Facebook comments
 @app.route('/analyze', methods=['POST'])
@@ -36,43 +34,21 @@ def analyze():
     if not post_url:
         return jsonify({'error': 'No URL provided'}), 400
 
-    # Scrape comments from Facebook post (implement scrape_facebook_comments function here)
     comments = scrape_facebook_comments(post_url)
     if not comments:
         return jsonify({'error': 'Failed to retrieve comments.'}), 500
 
-    # Perform sentiment analysis using transformers for multilingual support
+    # Perform sentiment analysis in batches to save memory
     analyzed_comments = []
     for comment in comments:
-        result = sentiment_pipeline(comment)[0]
-        label = result['label']
-        sentiment_label = "Positive" if label == '5 stars' else "Neutral" if label == '3 stars' else "Negative"
-        emoji = '😊' if sentiment_label == 'Positive' else '😐' if sentiment_label == 'Neutral' else '😠'
-
-        analyzed_comments.append({
-            'text': comment,
-            'sentiment': sentiment_label,
-            'emoji': emoji
-        })
-
-    return jsonify({'comments': analyzed_comments})
-
-# New route to analyze a single comment
-@app.route('/analyze_comment', methods=['POST'])
-def analyze_comment():
-    """Analyzes a single comment and returns its sentiment."""
-    try:
-        comment = request.json.get('comment', '')
         cleaned_comment = clean_comment(comment)
-
-        # Perform sentiment analysis using transformers
         result = sentiment_pipeline(cleaned_comment)[0]
-        label = result['label']
-        sentiment = "Positive" if label == '5 stars' else "Neutral" if label == '3 stars' else "Negative"
+        sentiment_label = "Positive" if result['label'] == '5 stars' else "Neutral" if result['label'] == '3 stars' else "Negative"
+        emoji = '😊' if sentiment_label == 'Positive' else '😐' if sentiment_label == 'Neutral' else '😠'
+        analyzed_comments.append({'text': cleaned_comment, 'sentiment': sentiment_label, 'emoji': emoji})
 
-        return jsonify({"sentiment": sentiment, "comment": cleaned_comment})
-    except Exception as e:
-        return jsonify({'error': str(e)})
+    gc.collect()  # Call garbage collection
+    return jsonify({'comments': analyzed_comments})
 
 # Route to upload CSV and analyze comments
 @app.route('/upload_csv', methods=['POST'])
@@ -99,49 +75,16 @@ def upload_csv():
         results = []
         for comment in df['Comment'].dropna():
             cleaned_comment = clean_comment(comment)
-
-            # Perform sentiment analysis using transformers
             result = sentiment_pipeline(cleaned_comment)[0]
-            label = result['label']
-            sentiment = 'Positive' if label == '5 stars' else 'Negative' if label == '1 star' else 'Neutral'
+            sentiment = 'Positive' if result['label'] == '5 stars' else 'Negative' if result['label'] == '1 star' else 'Neutral'
             emoji = '😊' if sentiment == 'Positive' else '😠' if sentiment == 'Negative' else '😐'
+            results.append({'comment': cleaned_comment, 'sentiment': sentiment, 'emoji': emoji})
 
-            results.append({
-                'comment': cleaned_comment,
-                'sentiment': sentiment,
-                'emoji': emoji,
-                'score': result['score']
-            })
-
+        gc.collect()  # Call garbage collection
         return jsonify({'results': results})
 
     except Exception as e:
         return jsonify({'error': str(e)})
-
-# Route to download analyzed comments as a CSV
-@app.route('/download_csv', methods=['POST'])
-def download_csv():
-    """Downloads analyzed comments as a CSV file."""
-    data = request.json
-    comments = data.get('comments')
-
-    output = StringIO()
-    writer = csv.DictWriter(output, fieldnames=['Comment', 'Sentiment', 'Emoji'])
-    writer.writeheader()
-
-    for comment in comments:
-        writer.writerow({
-            'Comment': comment['text'],
-            'Sentiment': comment['sentiment'],
-            'Emoji': comment['emoji']
-        })
-
-    output.seek(0)
-    response = make_response(output.getvalue())
-    response.headers["Content-Disposition"] = "attachment; filename=comments_analysis.csv"
-    response.headers["Content-type"] = "text/csv"
-
-    return response
 
 if __name__ == '__main__':
     app.run(debug=True)
