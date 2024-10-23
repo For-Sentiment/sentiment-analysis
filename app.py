@@ -1,9 +1,6 @@
-import pandas as pd
-import re
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from transformers import pipeline
-import gc
 
 # Initialize Flask app and CORS
 app = Flask(__name__)
@@ -36,7 +33,6 @@ def analyze():
         emoji = '😊' if sentiment_label == 'Positive' else '😐' if sentiment_label == 'Neutral' else '😠'
         analyzed_comments.append({'text': cleaned_comment, 'sentiment': sentiment_label, 'emoji': emoji})
 
-    gc.collect()  # Call garbage collection
     return jsonify({'comments': analyzed_comments})
 
 if __name__ == '__main__':
