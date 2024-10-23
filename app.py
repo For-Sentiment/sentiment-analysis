@@ -4,10 +4,14 @@ import os
 import csv
 from io import StringIO
 from flask import Flask, request, jsonify, make_response
+from playwright.sync_api import sync_playwright
 from flask_cors import CORS
 from transformers import pipeline
 import emoji  # Ensure you have this library installed if you plan to use it
 
+
+# Ensure Chromium is installed
+subprocess.run(["playwright", "install", "chromium"], check=True)
 # Initialize Flask app and CORS
 app = Flask(__name__)
 CORS(app)  # This will allow all domains. You can restrict it to specific domains if needed.
