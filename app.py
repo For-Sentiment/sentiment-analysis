@@ -80,7 +80,7 @@ def scrape_facebook_comments(post_url):
 # New function to send comments to the VPS for Tagalog sentiment analysis
 def analyze_tagalog_sentiment(comment):
     try:
-        vps_url = "http://<VPS_IP>:5000/analyze_tagalog"  # Replace <VPS_IP> with your VPS IP address
+        vps_url = "http://62.72.12.36:5000/analyze_tagalog"  # Replace <VPS_IP> with your VPS IP address
         response = requests.post(vps_url, json={"comment": comment})
         return response.json()
     except Exception as e:
