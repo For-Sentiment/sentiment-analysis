@@ -77,6 +77,15 @@ def scrape_facebook_comments(post_url):
         browser.close()
         return list(comments)
 
+# New function to send comments to the VPS for Tagalog sentiment analysis
+def analyze_tagalog_sentiment(comment):
+    try:
+        vps_url = "http://<VPS_IP>:5000/analyze_tagalog"  # Replace <VPS_IP> with your VPS IP address
+        response = requests.post(vps_url, json={"comment": comment})
+        return response.json()
+    except Exception as e:
+        return {"error": str(e)}
+
 # Route to analyze sentiment from scraped Facebook comments
 @app.route('/analyze', methods=['POST'])
 def analyze():
@@ -108,12 +117,21 @@ def analyze():
 
     return jsonify({'comments': analyzed_comments})
 
-# New route to analyze a single comment
+# Updated route to analyze a single comment with VPS integration for Tagalog
 @app.route('/analyze_comment', methods=['POST'])
 def analyze_comment():
     """Analyzes a single comment and returns its sentiment."""
     try:
         comment = request.json.get('comment', '')
+        is_tagalog = True  # Set this to True for Tagalog; add detection logic if needed.
+
+        if is_tagalog:
+            vps_result = analyze_tagalog_sentiment(comment)
+            if "error" in vps_result:
+                return jsonify(vps_result), 500
+            return jsonify(vps_result)
+
+        # Analyze locally for non-Tagalog comments
         comment = comment.lower()
         comment = re.sub(r'[^\w\s]', '', comment)  # Remove punctuation
         sentiment_scores = analyzer.polarity_scores(comment)
