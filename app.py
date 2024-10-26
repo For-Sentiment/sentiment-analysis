@@ -77,15 +77,6 @@ def scrape_facebook_comments(post_url):
         browser.close()
         return list(comments)
 
-# New function to send comments to the VPS for Tagalog sentiment analysis
-def analyze_tagalog_sentiment(comment):
-    try:
-        vps_url = "http://62.72.12.36:5000/analyze_tagalog"  # Replace <VPS_IP> with your VPS IP address
-        response = requests.post(vps_url, json={"comment": comment})
-        return response.json()
-    except Exception as e:
-        return {"error": str(e)}
-
 # Route to analyze sentiment from scraped Facebook comments
 @app.route('/analyze', methods=['POST'])
 def analyze():
